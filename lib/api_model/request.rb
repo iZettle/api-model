@@ -5,11 +5,11 @@ module ApiModel
     attr_accessor :path, :method, :options, :api_call
 
     def self.api_host=(api_host)
-    	@api_host = api_host
+      @api_host = api_host
     end
 
     def self.api_host
-    	@api_host || ""
+      @api_host || ""
     end
 
     def run
@@ -17,16 +17,16 @@ module ApiModel
     end
 
     def method
-    	@method ||= :get
+      @method ||= :get
     end
 
     def options
-    	@options ||= {}
+      @options ||= {}
     end
 
     def full_path
-    	return path if path =~ /^http/
-    	self.class.api_host + path
+      return path if path =~ /^http/
+      self.class.api_host + path
     end
 
   end
