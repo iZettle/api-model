@@ -26,4 +26,9 @@ describe ApiModel::Initializer do
     banana.ripe.should eq true
   end
 
+  it "should log if an attempt was made to set an attribute which is not defined" do
+    ApiModel::Log.should_receive(:debug).with "Could not set foo on Banana"
+    Banana.new foo: "bar"
+  end
+
 end

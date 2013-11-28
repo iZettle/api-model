@@ -19,7 +19,7 @@ module ApiModel
         begin
           public_send "#{key}=", value
         rescue
-          # TODO - log missing attr. Define attr perhaps?
+          Log.debug "Could not set #{key} on #{self.class.name}"
         end
       end
     end
