@@ -42,24 +42,48 @@ describe ApiModel::Response do
   end
 
   describe "#build_objects" do
-    it "should build a single object" do
+    let(:single_object) do
       valid_response.stub(:json_response_body).and_return name: "foo"
-      single = valid_response.build_objects BlogPost
+      valid_response.build_objects BlogPost
+    end
 
-      single.should be_a(BlogPost)
-      single.name.should eq "foo"
+    let(:array_of_objects) do
+      valid_response.stub(:json_response_body).and_return [{name: "foo"}, {name: "bar"}]
+      valid_response.build_objects BlogPost
+    end
+
+    it "should build a single object" do
+      single_object.should be_a(BlogPost)
+      single_object.name.should eq "foo"
     end
 
     it "should build an array of objects" do
-      valid_response.stub(:json_response_body).and_return [{name: "foo"}, {name: "bar"}]
-      array = valid_response.build_objects BlogPost
+      array_of_objects[0].should be_a(BlogPost)
+      array_of_objects[0].name.should eq "foo"
 
-      array[0].should be_a(BlogPost)
-      array[0].name.should eq "foo"
-
-      array[1].should be_a(BlogPost)
-      array[1].name.should eq "bar"
+      array_of_objects[1].should be_a(BlogPost)
+      array_of_objects[1].name.should eq "bar"
     end
+
+    it "should include the Typhoeus::Response object" do
+      single_object.http_response.should be_a(Typhoeus::Response)
+    end
+
+    it "should include the #json_response_body" do
+      single_object.json_response_body.should eq name: "foo"
+    end
+  end
+
+  describe "passing core methods down to the built class" do
+
+    ApiModel::Response::FALL_THROUGH_METHODS.each do |fall_trhough_method|
+      it "should pass ##{fall_trhough_method} on the built object class" do
+        allow_message_expectations_on_nil
+        valid_response.objects.should_receive(fall_trhough_method)
+        valid_response.send fall_trhough_method
+      end
+    end
+
   end
 
 end
