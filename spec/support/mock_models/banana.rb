@@ -1,4 +1,4 @@
-class Banana < ApiModel
+class Banana < ApiModel::Base
   attr_accessor :color, :size, :ripe
   after_initialize :set_ripeness
 

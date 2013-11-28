@@ -1,33 +1,22 @@
 require 'active_model'
+require 'active_support'
+require 'active_support/core_ext'
 
-class ApiModel
-  include ActiveModel::Conversion
-  include ActiveModel::Validations
-  extend ActiveModel::Naming
-  extend ActiveModel::Callbacks
+require 'api_model/initializer'
+require 'api_model/request'
 
-  define_model_callbacks :initialize
+module ApiModel
+  class Base
+    include ActiveModel::Conversion
+    include ActiveModel::Validations
+    extend ActiveModel::Naming
+    extend ActiveModel::Callbacks
 
-  def initialize(values={})
-    run_callbacks :initialize do
-      update_attributes values
+    include ApiModel::Initializer
+
+    def persisted?
+      false
     end
+
   end
-
-  def update_attributes(values={})
-    return unless values.present?
-
-    values.each do |key,value|
-      begin
-        public_send "#{key}=", value
-      rescue
-        # TODO - log missing attr. Define attr perhaps?
-      end
-    end
-  end
-
-  def persisted?
-    false
-  end
-
 end
