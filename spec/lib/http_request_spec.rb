@@ -1,21 +1,21 @@
 require 'spec_helper'
 
-describe ApiModel::Request do
+describe ApiModel::HttpRequest do
 
   describe "api_host" do
     it "should be possible to set the base api_host" do
-      ApiModel::Request.api_host = "http://api-model-specs.com"
-      ApiModel::Request.api_host.should eq "http://api-model-specs.com"
+      ApiModel::HttpRequest.api_host = "http://api-model-specs.com"
+      ApiModel::HttpRequest.api_host.should eq "http://api-model-specs.com"
     end
 
     it "should be used with #path to generate a #full_path" do
-      ApiModel::Request.api_host = "http://api-model-specs.com"
-      ApiModel::Request.new(path: "/foo").full_path.should eq "http://api-model-specs.com/foo"
+      ApiModel::HttpRequest.api_host = "http://api-model-specs.com"
+      ApiModel::HttpRequest.new(path: "/foo").full_path.should eq "http://api-model-specs.com/foo"
     end
   end
 
   describe "default attributes" do
-    subject { ApiModel::Request.new }
+    subject { ApiModel::HttpRequest.new }
 
     it "should default #method to :get" do
       subject.method.should eq :get
@@ -27,7 +27,7 @@ describe ApiModel::Request do
   end
 
   describe "sending a GET request" do
-    let(:request) { ApiModel::Request.new path: "http://api-model-specs.com/posts", method: :get }
+    let(:request) { ApiModel::HttpRequest.new path: "http://api-model-specs.com/posts", method: :get }
 
     it "should use typhoeus to send a request" do
       VCR.use_cassette('posts') do

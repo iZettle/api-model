@@ -4,7 +4,8 @@ require 'active_support/core_ext'
 require 'logger'
 
 require 'api_model/initializer'
-require 'api_model/request'
+require 'api_model/http_request'
+require 'api_model/response'
 
 module ApiModel
 
@@ -21,5 +22,12 @@ module ApiModel
     extend ActiveModel::Callbacks
 
     include ApiModel::Initializer
+
+    def self.get_json(path, options={})
+      builder = options.delete(:builder) || self
+
+      HttpRequest.new(options.merge(path: path)).run.build_objects(builder)
+    end
+
   end
 end
