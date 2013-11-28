@@ -16,6 +16,12 @@ describe ApiModel::Initializer do
     expect(banana.size).to eq "small"
   end
 
+  it "should not blog up if update_attributes is called with nil" do
+    expect {
+      banana.update_attributes nil
+    }.to_not raise_error
+  end
+
   it "should run callbacks on initialize" do
     banana.ripe.should eq true
   end
