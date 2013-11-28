@@ -2,6 +2,18 @@ require 'spec_helper'
 
 describe ApiModel::Request do
 
+	describe "api_host" do
+		it "should be possible to set the base api_host" do
+			ApiModel::Request.api_host = "http://api-model-specs.com"
+			ApiModel::Request.api_host.should eq "http://api-model-specs.com"
+		end
+
+		it "should be used with #path to generate a #full_path" do
+			ApiModel::Request.api_host = "http://api-model-specs.com"
+			ApiModel::Request.new(path: "/foo").full_path.should eq "http://api-model-specs.com/foo"
+		end
+	end
+
 	describe "default attributes" do
 		subject { ApiModel::Request.new }
 
