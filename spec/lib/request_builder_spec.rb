@@ -14,14 +14,16 @@ describe ApiModel::Request do
 		end
 	end
 
-  let(:request) { ApiModel::Request.new path: "http://api-model-specs.com/posts", method: :get }
+	describe "sending a GET request" do
+	  let(:request) { ApiModel::Request.new path: "http://api-model-specs.com/posts", method: :get }
 
-  it "should use typhoeus to send a request" do
-    VCR.use_cassette('posts') do
-      request.run
-    end
+	  it "should use typhoeus to send a request" do
+	    VCR.use_cassette('posts') do
+	      request.run
+	    end
 
-    request.api_call.success?.should eq true
-  end
+	    request.api_call.success?.should eq true
+	  end
+	end
 
 end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'support/mock_models/banana'
 
-describe ApiModel, "initialization" do
+describe ApiModel::Initializer do
 
   let(:banana) { Banana.new color: "yellow", size: "large" }
 
