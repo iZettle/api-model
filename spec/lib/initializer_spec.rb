@@ -20,8 +20,4 @@ describe ApiModel::Initializer do
     banana.ripe.should eq true
   end
 
-  it "should not be persisted by default" do
-    banana.persisted?.should eq false
-  end
-
 end

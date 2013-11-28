@@ -13,10 +13,5 @@ module ApiModel
     extend ActiveModel::Callbacks
 
     include ApiModel::Initializer
-
-    def persisted?
-      false
-    end
-
   end
 end
