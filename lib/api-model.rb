@@ -25,8 +25,7 @@ module ApiModel
 
     def self.get_json(path, options={})
       builder = options.delete(:builder) || self
-
-      HttpRequest.new(options.merge(path: path)).run.build_objects(builder)
+      HttpRequest.run(options.merge(path: path)).build_objects builder
     end
 
   end

@@ -9,9 +9,17 @@ module ApiModel
     # TODO - make json root configurable
     def build_objects(builder)
       if json_response_body.is_a? Array
-        json_response_body.collect{ |hash| builder.new hash }
+        json_response_body.collect{ |hash| build builder, hash }
       elsif json_response_body.is_a? Hash
-        builder.new json_response_body
+        build builder, json_response_body
+      end
+    end
+
+    def build(builder, hash)
+      if builder.respond_to? :build
+        builder.build hash
+      else
+        builder.new hash
       end
     end
 

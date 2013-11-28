@@ -12,6 +12,10 @@ module ApiModel
       @api_host || ""
     end
 
+    def self.run(options={})
+      self.new(options).run
+    end
+
     def run
       self.api_call = Typhoeus.send(method, full_path, options)
       Response.new self.api_call
