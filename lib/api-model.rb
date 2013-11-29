@@ -6,6 +6,7 @@ require 'logger'
 require 'api_model/initializer'
 require 'api_model/http_request'
 require 'api_model/response'
+require 'api_model/rest_methods'
 
 module ApiModel
 
@@ -22,22 +23,6 @@ module ApiModel
     extend ActiveModel::Callbacks
 
     include ApiModel::Initializer
-
-    def self.api_host=(api_host)
-      @api_host = api_host
-    end
-
-    def self.api_host
-      @api_host || ""
-    end
-
-    def self.get_json(path, options={})
-      # TODO - tidy this up...
-      builder = options.delete(:builder) || self
-      options[:api_host] = api_host
-
-      HttpRequest.run(options.merge(path: path)).build_objects builder
-    end
-
+    extend ApiModel::RestMethods
   end
 end
