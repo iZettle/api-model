@@ -40,7 +40,7 @@ module ApiModel
     end
 
     # Define common methods which should never be called on this abstract class, and should always be
-    # passed down to the :api_response object
+    # passed down to the #objects
     FALL_THROUGH_METHODS.each do |transparent_method|
       class_eval <<-RUBY_EVAL, __FILE__, __LINE__ + 1
         def #{transparent_method}(*args, &block)
