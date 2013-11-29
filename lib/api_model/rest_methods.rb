@@ -13,6 +13,10 @@ module ApiModel
       call_api :get, path, options
     end
 
+    def post_json(path, options={})
+      call_api :post, path, options
+    end
+
     def call_api(method, path, options={})
       request = HttpRequest.new path: path, method: method, api_host: api_host, caller: self
       request.builder = options.delete(:builder) || self

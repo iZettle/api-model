@@ -22,5 +22,9 @@ module ApiModel
       "#{api_host}#{path}"
     end
 
+    def request_method
+      api_call.request.original_options[:method]
+    end
+
   end
 end
