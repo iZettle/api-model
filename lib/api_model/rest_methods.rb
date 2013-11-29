@@ -10,11 +10,14 @@ module ApiModel
     end
 
     def get_json(path, options={})
-      # TODO - tidy this up...
-      builder = options.delete(:builder) || self
-      options[:api_host] = api_host
+      call_api :get, path, options
+    end
 
-      HttpRequest.run(options.merge(path: path)).build_objects builder
+    def call_api(method, path, options={})
+      request = HttpRequest.new path: path, method: method, api_host: api_host, caller: self
+      request.builder = options.delete(:builder) || self
+      request.options = options
+      request.run.build_objects
     end
 
   end

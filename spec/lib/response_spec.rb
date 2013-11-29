@@ -2,10 +2,10 @@ require 'spec_helper'
 require 'support/mock_models/blog_post'
 
 describe ApiModel::Response do
-  
+
   let(:valid_response) do
     VCR.use_cassette('posts') do
-      ApiModel::HttpRequest.new(path: "http://api-model-specs.com/single_post", method: :get).run
+      ApiModel::HttpRequest.new(path: "http://api-model-specs.com/single_post", method: :get, builder: BlogPost).run
     end
   end
 
@@ -16,9 +16,9 @@ describe ApiModel::Response do
     end
 
     it "should catch errors from parsing invalid json" do
-      valid_response.stub_chain(:http_response, :body).and_return "blah"
+      valid_response.stub_chain(:http_response, :api_call, :body).and_return "blah"
       ApiModel::Log.should_receive(:info).with "Could not parse JSON response: blah"
-      
+
       expect {
         valid_response.json_response_body
       }.to_not raise_error
@@ -44,12 +44,12 @@ describe ApiModel::Response do
   describe "#build_objects" do
     let(:single_object) do
       valid_response.stub(:json_response_body).and_return name: "foo"
-      valid_response.build_objects BlogPost
+      valid_response.build_objects
     end
 
     let(:array_of_objects) do
       valid_response.stub(:json_response_body).and_return [{name: "foo"}, {name: "bar"}]
-      valid_response.build_objects BlogPost
+      valid_response.build_objects
     end
 
     it "should build a single object" do
@@ -65,8 +65,8 @@ describe ApiModel::Response do
       array_of_objects[1].name.should eq "bar"
     end
 
-    it "should include the Typhoeus::Response object" do
-      single_object.http_response.should be_a(Typhoeus::Response)
+    it "should include the ApiModel::HttpRequest object" do
+      single_object.http_response.should be_a(ApiModel::HttpRequest)
     end
 
     it "should include the #json_response_body" do

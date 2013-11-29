@@ -25,7 +25,7 @@ describe ApiModel::HttpRequest do
     end
 
     it "should be used with #path to generate a #full_path" do
-      blog_post.http_response.request.url.should eq "http://api-model-specs.com/single_post"
+      blog_post.http_response.api_call.request.url.should eq "http://api-model-specs.com/single_post"
     end
   end
 

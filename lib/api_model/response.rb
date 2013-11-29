@@ -14,11 +14,11 @@ module ApiModel
     end
 
     # TODO - make json root configurable
-    def build_objects(builder)
+    def build_objects
       if json_response_body.is_a? Array
-        self.objects = json_response_body.collect{ |hash| build builder, hash }
+        self.objects = json_response_body.collect{ |hash| build http_response.builder, hash }
       elsif json_response_body.is_a? Hash
-        self.objects = self.build builder, json_response_body
+        self.objects = self.build http_response.builder, json_response_body
       end
 
       self
@@ -33,9 +33,9 @@ module ApiModel
     end
 
     def json_response_body
-      JSON.parse http_response.body
+      JSON.parse http_response.api_call.body
     rescue JSON::ParserError
-      Log.info "Could not parse JSON response: #{http_response.body}"
+      Log.info "Could not parse JSON response: #{http_response.api_call.body}"
       return nil
     end
 

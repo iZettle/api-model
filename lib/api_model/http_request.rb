@@ -2,15 +2,11 @@ module ApiModel
   class HttpRequest
     include ApiModel::Initializer
 
-    attr_accessor :path, :method, :options, :api_call, :api_host
-
-    def self.run(options={})
-      self.new(options).run
-    end
+    attr_accessor :path, :method, :options, :api_call, :api_host, :caller, :builder
 
     def run
       self.api_call = Typhoeus.send(method, full_path, options)
-      Response.new self.api_call
+      Response.new self
     end
 
     def method
