@@ -2,15 +2,7 @@ module ApiModel
   class HttpRequest
     include ApiModel::Initializer
 
-    attr_accessor :path, :method, :options, :api_call
-
-    def self.api_host=(api_host)
-      @api_host = api_host
-    end
-
-    def self.api_host
-      @api_host || ""
-    end
+    attr_accessor :path, :method, :options, :api_call, :api_host
 
     def self.run(options={})
       self.new(options).run
@@ -31,7 +23,7 @@ module ApiModel
 
     def full_path
       return path if path =~ /^http/
-      self.class.api_host + path
+      "#{api_host}#{path}"
     end
 
   end

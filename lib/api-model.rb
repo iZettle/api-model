@@ -23,8 +23,19 @@ module ApiModel
 
     include ApiModel::Initializer
 
+    def self.api_host=(api_host)
+      @api_host = api_host
+    end
+
+    def self.api_host
+      @api_host || ""
+    end
+
     def self.get_json(path, options={})
+      # TODO - tidy this up...
       builder = options.delete(:builder) || self
+      options[:api_host] = api_host
+
       HttpRequest.run(options.merge(path: path)).build_objects builder
     end
 

@@ -1,18 +1,7 @@
 require 'spec_helper'
+require 'support/mock_models/blog_post'
 
 describe ApiModel::HttpRequest do
-
-  describe "api_host" do
-    it "should be possible to set the base api_host" do
-      ApiModel::HttpRequest.api_host = "http://api-model-specs.com"
-      ApiModel::HttpRequest.api_host.should eq "http://api-model-specs.com"
-    end
-
-    it "should be used with #path to generate a #full_path" do
-      ApiModel::HttpRequest.api_host = "http://api-model-specs.com"
-      ApiModel::HttpRequest.new(path: "/foo").full_path.should eq "http://api-model-specs.com/foo"
-    end
-  end
 
   describe "default attributes" do
     subject { ApiModel::HttpRequest.new }
@@ -23,6 +12,20 @@ describe ApiModel::HttpRequest do
 
     it "should default #options to a blank hash" do
       subject.options.should eq Hash.new
+    end
+  end
+
+  describe "using api_host" do
+    let(:blog_post) do
+      BlogPost.api_host = "http://api-model-specs.com"
+
+      VCR.use_cassette('posts') do
+        BlogPost.get_json "/single_post"
+      end
+    end
+
+    it "should be used with #path to generate a #full_path" do
+      blog_post.http_response.request.url.should eq "http://api-model-specs.com/single_post"
     end
   end
 
