@@ -1,6 +1,6 @@
 .bundle/
 log/*.log
 pkg/
-
+*.gem
 .idea
 *.iml

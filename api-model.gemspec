@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.version     = "0.0.1"
   s.authors     = ["Damien Timewell"]
   s.email       = ["mail@damientimewell.com"]
-  s.homepage    = "https://github.com/idlefingers/api-model"
+  s.homepage    = "https://github.com/iZettle/api-model"
   s.summary     = "A simple way of interacting with rest APIs"
   s.description = "A simple way of interacting with rest APIs"
 
