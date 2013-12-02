@@ -1,9 +1,11 @@
 module ApiModel
   class Configuration
-    attr_accessor :host
+    include Initializer
 
-    def initialize
-      @host = ''
+    attr_accessor :host, :json_root
+
+    def self.from_inherited_config(config)
+      new config.instance_values.reject {|k,v| v.blank? }
     end
   end
 
@@ -12,15 +14,19 @@ module ApiModel
 
     module ClassMethods
 
+      def reset_api_configuration
+        @_api_config = nil
+      end
+
       def api_model_configuration
-        @api_model_configuration || superclass.api_model_configuration
+        @_api_config || superclass.api_model_configuration
       rescue
-        @api_model_configuration = Configuration.new
+        @_api_config = Configuration.new
       end
 
       def api_model
-        @api_model_configuration = Configuration.new
-        yield @api_model_configuration
+        @_api_config = Configuration.from_inherited_config api_model_configuration
+        yield @_api_config
       end
 
     end

@@ -20,6 +20,7 @@ module ApiModel
   class Base
     include ActiveModel::Conversion
     include ActiveModel::Validations
+    include ActiveModel::Serialization
     extend ActiveModel::Naming
     extend ActiveModel::Callbacks
 

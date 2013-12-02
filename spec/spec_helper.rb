@@ -14,9 +14,7 @@ RSpec.configure do |config|
 
   # Reset any config changes after each spec
   config.after(:each) do
-    ApiModel::Base.api_model do |c|
-      c.host = ""
-    end
+    ApiModel::Base.reset_api_configuration
   end
 
 end
