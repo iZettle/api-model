@@ -48,51 +48,51 @@ describe ApiModel do
         custom_built_blog_post.title.should eq "FOOBAR"
       end
     end
+  end
 
-    describe "using Hashie to build with properties" do
-      describe "with a single object response" do
-        let(:car) do
-          VCR.use_cassette('cars') { Car.get_json "http://cars.com/one_convertable" }
-        end
-
-        it 'should build the correct object' do
-          car.should be_a(Car)
-        end
-
-        it 'should correctly rename properties' do
-          car.number_of_doors.should eq 2
-        end
-
-        it 'should correctly transform properties' do
-          car.top_speed.should eq 600
-        end
-
-        it 'should let you define custom methods as normal' do
-          car.is_fast?.should be_true
-        end
+  describe "using Hashie to build with properties" do
+    describe "with a single object response" do
+      let(:car) do
+        VCR.use_cassette('cars') { Car.get_json "http://cars.com/one_convertable" }
       end
 
-      describe "with a collection of objects response" do
-        let(:cars) do
-          VCR.use_cassette('cars') { Car.get_json "http://cars.com/fast_ones" }
-        end
+      it 'should build the correct object' do
+        car.should be_a(Car)
+      end
 
-        it 'should build an array of the correct objects' do
-          cars.should be_a(Array)
-          cars.collect { |car| car.should be_a(Car) }
-        end
+      it 'should correctly rename properties' do
+        car.number_of_doors.should eq 2
+      end
 
-        it 'should correctly rename properties' do
-          cars.last.number_of_doors.should eq 4
-        end
+      it 'should correctly transform properties' do
+        car.top_speed.should eq 600
+      end
 
-        it 'should correctly transform properties' do
-          cars.last.top_speed.should eq 300
-        end
+      it 'should let you define custom methods as normal' do
+        car.is_fast?.should be_true
+      end
+    end
 
-        it 'should let you define custom methods as normal' do
-          cars.last.is_fast?.should be_false
-        end
+    describe "with a collection of objects response" do
+      let(:cars) do
+        VCR.use_cassette('cars') { Car.get_json "http://cars.com/fast_ones" }
+      end
+
+      it 'should build an array of the correct objects' do
+        cars.should be_a(Array)
+        cars.collect { |car| car.should be_a(Car) }
+      end
+
+      it 'should correctly rename properties' do
+        cars.last.number_of_doors.should eq 4
+      end
+
+      it 'should correctly transform properties' do
+        cars.last.top_speed.should eq 300
+      end
+
+      it 'should let you define custom methods as normal' do
+        cars.last.is_fast?.should be_false
       end
     end
   end
