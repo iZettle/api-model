@@ -19,7 +19,7 @@ module ApiModel
 
     def full_path
       return path if path =~ /^http/
-      "#{config.api_host}#{path}"
+      "#{config.host}#{path}"
     end
 
     def request_method

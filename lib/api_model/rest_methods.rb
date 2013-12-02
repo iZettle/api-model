@@ -1,10 +1,6 @@
 module ApiModel
   module RestMethods
 
-    # def api_host=(api_host)
-    #   @api_host = api_host
-    # end
-
     def get_json(path, options={})
       call_api :get, path, options
     end

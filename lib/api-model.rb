@@ -3,7 +3,6 @@ require 'active_support'
 require 'active_support/core_ext'
 require 'logger'
 
-require 'api_model/configuration'
 require 'api_model/initializer'
 require 'api_model/http_request'
 require 'api_model/response'
@@ -39,10 +38,10 @@ module ApiModel
     end
 
     class Configuration
-      attr_accessor :api_host
+      attr_accessor :host
 
       def initialize
-        @api_host = ''
+        @host = ''
       end
     end
 
