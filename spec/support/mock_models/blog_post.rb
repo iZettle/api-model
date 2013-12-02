@@ -1,5 +1,6 @@
 class BlogPost < ApiModel::Base
-  attr_accessor :name, :title
+  property :name
+  property :title
 
   class CustomBuilder
     def build(hash)

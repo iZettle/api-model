@@ -2,7 +2,7 @@ require 'active_model'
 require 'active_support'
 require 'active_support/core_ext'
 require 'logger'
-require 'hashie/trash'
+require 'hashie'
 
 require 'api_model/initializer'
 require 'api_model/http_request'
@@ -26,7 +26,15 @@ module ApiModel
     extend ActiveModel::Callbacks
 
     extend RestMethods
-    include Initializer
     include ConfigurationMethods
+
+    # Overrides Hashie::Trash to catch errors from trying to set properties which have not been defined.
+    # It would be nice to handle this in a cleaner way. Perhaps even automatically define the properties.
+    def property_exists?(property)
+      super property
+    rescue NoMethodError
+      puts "Could not set #{property} on #{self.class.name}"
+    end
   end
+
 end

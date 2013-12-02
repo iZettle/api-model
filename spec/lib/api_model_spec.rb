@@ -71,6 +71,10 @@ describe ApiModel do
       it 'should let you define custom methods as normal' do
         car.is_fast?.should be_true
       end
+
+      it 'should let you respect default values for properties' do
+        car.name.should eq "Ferrari"
+      end
     end
 
     describe "with a collection of objects response" do
@@ -93,6 +97,11 @@ describe ApiModel do
 
       it 'should let you define custom methods as normal' do
         cars.last.is_fast?.should be_false
+      end
+
+      it 'should respect default values for properties, but also override them' do
+        cars.first.name.should eq "Ferrari"
+        cars.last.name.should eq "Ford"
       end
     end
   end

@@ -3,6 +3,10 @@ require 'support/mock_models/banana'
 
 describe ApiModel::Initializer do
 
+  Banana.class_eval do
+    include ApiModel::Initializer
+  end
+
   let(:banana) { Banana.new color: "yellow", size: "large" }
 
   it "should set attributes when initializing with a hash" do
@@ -16,14 +20,10 @@ describe ApiModel::Initializer do
     expect(banana.size).to eq "small"
   end
 
-  it "should not blog up if update_attributes is called with nil" do
+  it "should not blow up if update_attributes is called with nil" do
     expect {
       banana.update_attributes nil
     }.to_not raise_error
-  end
-
-  it "should run callbacks on initialize" do
-    banana.ripe.should eq true
   end
 
   it "should log if an attempt was made to set an attribute which is not defined" do

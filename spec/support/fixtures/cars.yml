@@ -50,7 +50,7 @@ http_interactions:
       - keep-alive
     body:
       encoding: UTF-8
-      string: "[{\"numberOfDoors\":2,\"top_speed\":60},{\"numberOfDoors\":4,\"top_speed\":30}]"
+      string: "[{\"numberOfDoors\":2,\"top_speed\":60},{\"numberOfDoors\":4,\"top_speed\":30,\"name\":\"Ford\"}]"
     http_version:
   recorded_at: Thu, 28 Nov 2013 16:02:20 GMT
 

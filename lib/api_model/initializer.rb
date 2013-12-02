@@ -1,16 +1,8 @@
 module ApiModel
   module Initializer
-    extend ActiveSupport::Concern
-
-    included do
-      extend ActiveModel::Callbacks
-      define_model_callbacks :initialize
-    end
 
     def initialize(values={})
-      run_callbacks :initialize do
-        update_attributes values
-      end
+      update_attributes values
     end
 
     def update_attributes(values={})
