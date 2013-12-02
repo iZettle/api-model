@@ -1,9 +1,13 @@
 class MultipleHostsFoo < ApiModel::Base
-  self.api_host = "http://foo.com"
+  configure_api_model do |config|
+    config.api_host = "http://foo.com"
+  end
 end
 
 class MultipleHostsBar < ApiModel::Base
-  self.api_host = "http://bar.com"
+  configure_api_model do |config|
+    config.api_host = "http://bar.com"
+  end
 end
 
 class MultipleHostsNone < ApiModel::Base

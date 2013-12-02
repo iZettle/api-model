@@ -5,7 +5,9 @@ describe ApiModel do
 
   describe "sending different types of requests" do
     before do
-      BlogPost.api_host = "http://api-model-specs.com"
+      BlogPost.configure_api_model do |config|
+        config.api_host = "http://api-model-specs.com"
+      end
     end
 
     it "should be possible to send a GET request" do

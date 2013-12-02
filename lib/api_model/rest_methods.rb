@@ -1,13 +1,9 @@
 module ApiModel
   module RestMethods
 
-    def api_host=(api_host)
-      @api_host = api_host
-    end
-
-    def api_host
-      @api_host || ""
-    end
+    # def api_host=(api_host)
+    #   @api_host = api_host
+    # end
 
     def get_json(path, options={})
       call_api :get, path, options
@@ -18,7 +14,7 @@ module ApiModel
     end
 
     def call_api(method, path, options={})
-      request = HttpRequest.new path: path, method: method, api_host: api_host, caller: self
+      request = HttpRequest.new path: path, method: method, caller: self, config: api_model_configuration
       request.builder = options.delete(:builder) || self
       request.options = options
       request.run.build_objects
