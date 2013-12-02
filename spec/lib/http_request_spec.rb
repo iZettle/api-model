@@ -17,7 +17,7 @@ describe ApiModel::HttpRequest do
 
   describe "using api_host" do
     let(:blog_post) do
-      BlogPost.configure_api_model do |config|
+      BlogPost.api_model do |config|
         config.host = "http://api-model-specs.com"
       end
 

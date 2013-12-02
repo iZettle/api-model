@@ -6,7 +6,7 @@ describe ApiModel, "Configuration" do
 
   describe "api_host" do
     before do
-      Banana.configure_api_model do |config|
+      Banana.api_model do |config|
         config.host = "foobarbaz.com"
       end
     end

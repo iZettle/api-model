@@ -32,7 +32,7 @@ module ApiModel
         @api_model_configuration ||= Configuration.new
       end
 
-      def configure_api_model
+      def api_model
         yield api_model_configuration
       end
     end
