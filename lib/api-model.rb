@@ -2,6 +2,7 @@ require 'active_model'
 require 'active_support'
 require 'active_support/core_ext'
 require 'logger'
+require 'hashie/trash'
 
 require 'api_model/initializer'
 require 'api_model/http_request'
@@ -17,7 +18,7 @@ module ApiModel
     Log = Logger.new STDOUT
   end
 
-  class Base
+  class Base < Hashie::Trash
     include ActiveModel::Conversion
     include ActiveModel::Validations
     include ActiveModel::Serialization
