@@ -23,8 +23,8 @@ module ApiModel
     extend ActiveModel::Naming
     extend ActiveModel::Callbacks
 
-    include ApiModel::Initializer
-    extend ApiModel::RestMethods
-    extend ApiModel::ConfigurationMethods
+    extend RestMethods
+    include Initializer
+    include ConfigurationMethods
   end
 end

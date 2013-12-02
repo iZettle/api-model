@@ -1,9 +1,10 @@
 module ApiModel
   module Initializer
+    extend ActiveSupport::Concern
 
-    def self.included(klass)
-      klass.extend ActiveModel::Callbacks
-      klass.define_model_callbacks :initialize
+    included do
+      extend ActiveModel::Callbacks
+      define_model_callbacks :initialize
     end
 
     def initialize(values={})

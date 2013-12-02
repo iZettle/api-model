@@ -4,9 +4,9 @@ require 'support/mock_models/multiple_hosts'
 
 describe ApiModel, "Configuration" do
 
-  describe "api_host" do
+  describe "api_host", "with a default" do
     before do
-      Banana.api_model do |config|
+      ApiModel::Base.api_model do |config|
         config.host = "foobarbaz.com"
       end
     end
@@ -14,7 +14,9 @@ describe ApiModel, "Configuration" do
     it "should set the api host for all classes which inherit ApiModel::Base" do
       Banana.api_model_configuration.host.should eq "foobarbaz.com"
     end
+  end
 
+  describe "api_host", "with no defaults" do
     describe "with combinations of setting different hosts" do
       it "should no override each other" do
         MultipleHostsFoo.api_model_configuration.host.should eq("http://foo.com")
