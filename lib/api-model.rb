@@ -7,6 +7,7 @@ require 'api_model/initializer'
 require 'api_model/http_request'
 require 'api_model/response'
 require 'api_model/rest_methods'
+require 'api_model/configuration'
 
 module ApiModel
 
@@ -24,26 +25,6 @@ module ApiModel
 
     include ApiModel::Initializer
     extend ApiModel::RestMethods
-
-    class << self
-      attr_writer :api_model_configuration
-
-      def api_model_configuration
-        @api_model_configuration ||= Configuration.new
-      end
-
-      def api_model
-        yield api_model_configuration
-      end
-    end
-
-    class Configuration
-      attr_accessor :host
-
-      def initialize
-        @host = ''
-      end
-    end
-
+    extend ApiModel::ConfigurationMethods
   end
 end
