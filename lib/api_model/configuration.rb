@@ -10,15 +10,17 @@ module ApiModel
   module ConfigurationMethods
     extend ActiveSupport::Concern
 
-    included do
-      mattr_accessor :api_model_configuration, instance_writer: false
-      self.api_model_configuration = Configuration.new
-    end
-
     module ClassMethods
 
+      def api_model_configuration
+        @api_model_configuration || superclass.api_model_configuration
+      rescue
+        @api_model_configuration = Configuration.new
+      end
+
       def api_model
-        yield api_model_configuration
+        @api_model_configuration = Configuration.new
+        yield @api_model_configuration
       end
 
     end
