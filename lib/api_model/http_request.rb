@@ -4,6 +4,8 @@ module ApiModel
 
     attr_accessor :path, :method, :options, :api_call, :builder, :config
 
+    after_initialize :set_default_options
+
     def run
       self.api_call = Typhoeus.send method, full_path, options
       Response.new self
@@ -24,6 +26,13 @@ module ApiModel
 
     def request_method
       api_call.request.original_options[:method]
+    end
+
+    private
+
+    def set_default_options
+      options[:headers] ||= {}
+      options[:headers].reverse_merge! config.headers if config.try(:headers)
     end
 
   end

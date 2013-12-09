@@ -34,6 +34,32 @@ describe ApiModel, "Configuration" do
     end
   end
 
+  describe "headers" do
+    it 'should create default headers for content type and accepts' do
+      headers = Banana.api_model_configuration.headers
+      headers["Content-Type"].should eq "application/json; charset=utf-8"
+      headers["Accept"].should eq "application/json"
+    end
+
+    it 'should be possible to set new headers' do
+      ApiModel::Base.api_model { |config| config.headers = { foo: "bar" } }
+      Banana.api_model_configuration.headers[:foo].should eq "bar"
+    end
+
+    it 'should retain the default headers when you add a new one' do
+      ApiModel::Base.api_model { |config| config.headers = { foo: "bar" } }
+
+      headers = Banana.api_model_configuration.headers
+      headers.should have_key "Accept"
+      headers.should have_key "Content-Type"
+    end
+
+    it 'should be possible to override default headers' do
+      ApiModel::Base.api_model { |config| config.headers = { "Accept" => "image/gif" } }
+      Banana.api_model_configuration.headers["Accept"].should eq "image/gif"
+    end
+  end
+
   it 'should not unset other config values when you set a new one' do
     ApiModel::Base.api_model { |c| c.host = "foo.com" }
     Banana.api_model { |c| c.json_root = "banana" }

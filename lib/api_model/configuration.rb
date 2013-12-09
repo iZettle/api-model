@@ -2,7 +2,12 @@ module ApiModel
   class Configuration
     include Initializer
 
-    attr_accessor :host, :json_root
+    attr_accessor :host, :json_root, :headers
+
+    def headers
+      @headers ||= {}
+      @headers.reverse_merge "Content-Type" => "application/json; charset=utf-8",  "Accept" => "application/json"
+    end
 
     def self.from_inherited_config(config)
       new config.instance_values.reject {|k,v| v.blank? }
