@@ -8,7 +8,7 @@ module ApiModel
 
     def run
       self.api_call = Typhoeus.send method, full_path, options
-      Response.new self
+      Response.new self, config
     end
 
     def method

@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'support/mock_models/blog_post'
+require 'support/mock_models/user'
 
 describe ApiModel::Response do
 
@@ -22,6 +23,49 @@ describe ApiModel::Response do
       expect {
         valid_response.json_response_body
       }.to_not raise_error
+    end
+  end
+
+  describe "using a custom json root on the response body" do
+    let :users do
+      User.api_model do |c|
+        c.json_root = "users"
+      end
+      VCR.use_cassette('users') { User.get_json "http://api-model-specs.com/users" }
+    end
+
+    it 'should use the json root to build from' do
+      users.should be_a Array
+      users.size.should eq 3
+
+      users.each do |user|
+        user.should be_a User
+      end
+    end
+  end
+
+  describe "using a multi-level json root on the response body" do
+    let :user_search do
+      VCR.use_cassette('users') { User.get_json "http://api-model-specs.com/search" }
+    end
+
+    it 'should use the deep json root to build from' do
+      User.api_model { |c| c.json_root = "search.results.users" }
+
+      user_search.should be_a Array
+      user_search.size.should eq 3
+
+      user_search.each do |user|
+        user.should be_a User
+      end
+    end
+
+    it 'should raise a ApiModel::ResponseBuilderError exception if the hash does not contain the key' do
+      User.api_model { |c| c.json_root = "search.results.users.foo" }
+
+      expect {
+        user_search
+      }.to raise_error(ApiModel::ResponseBuilderError)
     end
   end
 

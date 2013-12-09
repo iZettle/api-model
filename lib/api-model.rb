@@ -12,6 +12,8 @@ require 'api_model/configuration'
 
 module ApiModel
 
+  class ResponseBuilderError < StandardError; end
+
   if defined? Rails
     Log = Rails.logger
   else

@@ -9,17 +9,16 @@ module ApiModel
 
     attr_accessor :http_response, :objects
 
-    def initialize(http_response)
+    def initialize(http_response, config)
       @http_response = http_response
+      @_config = config
     end
 
     def build_objects
-      build_hash = json_response_body
-
-      if build_hash.is_a? Array
-        self.objects = build_hash.collect{ |hash| build http_response.builder, hash }
-      elsif build_hash.is_a? Hash
-        self.objects = self.build http_response.builder, build_hash
+      if response_build_hash.is_a? Array
+        self.objects = response_build_hash.collect{ |hash| build http_response.builder, hash }
+      elsif response_build_hash.is_a? Hash
+        self.objects = self.build http_response.builder, response_build_hash
       end
 
       self
@@ -52,6 +51,27 @@ module ApiModel
 
     def method_missing(method_name, *args, &block)
       objects.send method_name, *args, &block
+    end
+
+    private
+
+    # If the model config defines a json root, use it on the json_response_body
+    # to dig down in to the hash.
+    #
+    # The root for a deeply nested hash will come in as a string with key names split
+    # with a colon.
+    def response_build_hash
+      if @_config.present? && @_config.json_root.present?
+        begin
+          @_config.json_root.split(".").inject(json_response_body) do |hash,key|
+            hash.fetch(key)
+          end
+        rescue
+          raise ResponseBuilderError, "Could not find key #{@_config.json_root} in:\n#{json_response_body}"
+        end
+      else
+        json_response_body
+      end
     end
 
   end
