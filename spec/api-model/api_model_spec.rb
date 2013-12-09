@@ -39,7 +39,7 @@ describe ApiModel do
     describe "with a custom builder" do
       let(:custom_built_blog_post) do
         VCR.use_cassette('posts') do
-          BlogPost.get_json "http://api-model-specs.com/single_post", builder: BlogPost::CustomBuilder.new
+          BlogPost.get_json "http://api-model-specs.com/single_post", {}, builder: BlogPost::CustomBuilder.new
         end
       end
 
