@@ -30,10 +30,11 @@ module ApiModel
 
     # Overrides Hashie::Trash to catch errors from trying to set properties which have not been defined.
     # It would be nice to handle this in a cleaner way. Perhaps even automatically define the properties.
-    def property_exists?(property)
-      super property
+    def property_exists?(property_name)
+      super property_name
     rescue NoMethodError
-      puts "Could not set #{property} on #{self.class.name}"
+      Log.debug "Could not set #{property_name} on #{self.class.name}. Defining it now."
+      self.class.property property_name.to_sym
     end
   end
 

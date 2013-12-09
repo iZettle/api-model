@@ -52,7 +52,7 @@ describe ApiModel do
 
   describe "using Hashie to build with properties" do
     describe "with a single object response" do
-      let(:car) do
+      let :car do
         VCR.use_cassette('cars') { Car.get_json "http://cars.com/one_convertable" }
       end
 
@@ -78,7 +78,7 @@ describe ApiModel do
     end
 
     describe "with a collection of objects response" do
-      let(:cars) do
+      let :cars do
         VCR.use_cassette('cars') { Car.get_json "http://cars.com/fast_ones" }
       end
 
@@ -102,6 +102,22 @@ describe ApiModel do
       it 'should respect default values for properties, but also override them' do
         cars.first.name.should eq "Ferrari"
         cars.last.name.should eq "Ford"
+      end
+    end
+
+    describe "with a single object which has properties which are undefined" do
+      let :new_car do
+        VCR.use_cassette('cars') { Car.get_json "http://cars.com/new_model" }
+      end
+
+      it "should not raise an exception" do
+        expect {
+          new_car
+        }.to_not raise_error
+      end
+
+      it 'should define the missing property on the fly' do
+        new_car.shiney.should eq true
       end
     end
   end
