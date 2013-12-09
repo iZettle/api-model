@@ -28,8 +28,8 @@ module ApiModel
     extend RestMethods
     include ConfigurationMethods
 
-    # Overrides Hashie::Trash to catch errors from trying to set properties which have not been defined.
-    # It would be nice to handle this in a cleaner way. Perhaps even automatically define the properties.
+    # Overrides Hashie::Trash to catch errors from trying to set properties which have not been defined
+    # and defines it automatically
     def property_exists?(property_name)
       super property_name
     rescue NoMethodError
