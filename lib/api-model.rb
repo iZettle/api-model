@@ -11,13 +11,17 @@ require 'api_model/rest_methods'
 require 'api_model/configuration'
 
 module ApiModel
+  Log = Logger.new STDOUT
 
   class ResponseBuilderError < StandardError; end
 
-  if defined? Rails
-    Log = Rails.logger
-  else
-    Log = Logger.new STDOUT
+  if defined?(Rails)
+    class Railtie < Rails::Railtie
+      initializer "api-model" do
+        ApiModel.send :remove_const, :Log
+        ApiModel::Log = Rails.logger
+      end
+    end
   end
 
   class Base < Hashie::Trash
