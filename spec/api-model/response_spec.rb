@@ -28,7 +28,7 @@ describe ApiModel::Response do
 
   describe "using a custom json root on the response body" do
     let :users do
-      User.api_model do |c|
+      User.api_config do |c|
         c.json_root = "users"
       end
       VCR.use_cassette('users') { User.get_json "http://api-model-specs.com/users" }
@@ -50,7 +50,7 @@ describe ApiModel::Response do
     end
 
     it 'should use the deep json root to build from' do
-      User.api_model { |c| c.json_root = "search.results.users" }
+      User.api_config { |c| c.json_root = "search.results.users" }
 
       user_search.should be_a Array
       user_search.size.should eq 3
@@ -61,7 +61,7 @@ describe ApiModel::Response do
     end
 
     it 'should raise a ApiModel::ResponseBuilderError exception if the hash does not contain the key' do
-      User.api_model { |c| c.json_root = "search.results.users.foo" }
+      User.api_config { |c| c.json_root = "search.results.users.foo" }
 
       expect {
         user_search

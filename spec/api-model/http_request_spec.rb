@@ -18,7 +18,7 @@ describe ApiModel::HttpRequest do
 
   describe "using api_host" do
     let(:blog_post) do
-      BlogPost.api_model do |config|
+      BlogPost.api_config do |config|
         config.host = "http://api-model-specs.com"
       end
 
@@ -34,7 +34,7 @@ describe ApiModel::HttpRequest do
 
   describe "headers" do
     let :request_headers do
-      BlogPost.api_model { |config| config.host = "http://api-model-specs.com" }
+      BlogPost.api_config { |config| config.host = "http://api-model-specs.com" }
       blog_post = VCR.use_cassette('posts') { BlogPost.get_json "/single_post" }
       blog_post.http_response.api_call.request.options[:headers]
     end

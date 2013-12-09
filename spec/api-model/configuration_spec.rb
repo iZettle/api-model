@@ -10,7 +10,7 @@ describe ApiModel, "Configuration" do
 
   describe "api_host" do
     it "should set the api host for all classes which inherit ApiModel::Base" do
-      ApiModel::Base.api_model do |config|
+      ApiModel::Base.api_config do |config|
         config.host = "foobarbaz.com"
       end
 
@@ -26,7 +26,7 @@ describe ApiModel, "Configuration" do
 
   describe "json_root" do
     it 'should be possible to set on a class' do
-      Banana.api_model do |config|
+      Banana.api_config do |config|
         config.json_root = "foo_bar"
       end
 
@@ -42,12 +42,12 @@ describe ApiModel, "Configuration" do
     end
 
     it 'should be possible to set new headers' do
-      ApiModel::Base.api_model { |config| config.headers = { foo: "bar" } }
+      ApiModel::Base.api_config { |config| config.headers = { foo: "bar" } }
       Banana.api_model_configuration.headers[:foo].should eq "bar"
     end
 
     it 'should retain the default headers when you add a new one' do
-      ApiModel::Base.api_model { |config| config.headers = { foo: "bar" } }
+      ApiModel::Base.api_config { |config| config.headers = { foo: "bar" } }
 
       headers = Banana.api_model_configuration.headers
       headers.should have_key "Accept"
@@ -55,22 +55,22 @@ describe ApiModel, "Configuration" do
     end
 
     it 'should be possible to override default headers' do
-      ApiModel::Base.api_model { |config| config.headers = { "Accept" => "image/gif" } }
+      ApiModel::Base.api_config { |config| config.headers = { "Accept" => "image/gif" } }
       Banana.api_model_configuration.headers["Accept"].should eq "image/gif"
     end
   end
 
   it 'should not unset other config values when you set a new one' do
-    ApiModel::Base.api_model { |c| c.host = "foo.com" }
-    Banana.api_model { |c| c.json_root = "banana" }
+    ApiModel::Base.api_config { |c| c.host = "foo.com" }
+    Banana.api_config { |c| c.json_root = "banana" }
 
     Banana.api_model_configuration.host.should eq "foo.com"
     Banana.api_model_configuration.json_root.should eq "banana"
   end
 
   it 'should override config values from the superclass if it is changed' do
-    ApiModel::Base.api_model { |c| c.host = "will-go.com" }
-    Banana.api_model { |c| c.host = "new-host.com" }
+    ApiModel::Base.api_config { |c| c.host = "will-go.com" }
+    Banana.api_config { |c| c.host = "new-host.com" }
 
     Banana.api_model_configuration.host.should eq "new-host.com"
   end

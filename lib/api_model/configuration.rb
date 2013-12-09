@@ -29,7 +29,7 @@ module ApiModel
         @_api_config = Configuration.new
       end
 
-      def api_model
+      def api_config
         @_api_config = Configuration.from_inherited_config api_model_configuration
         yield @_api_config
       end
