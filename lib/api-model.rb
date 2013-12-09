@@ -14,6 +14,8 @@ module ApiModel
   Log = Logger.new STDOUT
 
   class ResponseBuilderError < StandardError; end
+  class UnauthenticatedError < StandardError; end
+  class NotFoundError < StandardError; end
 
   if defined?(Rails)
     class Railtie < Rails::Railtie

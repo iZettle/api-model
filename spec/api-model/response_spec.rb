@@ -96,6 +96,11 @@ describe ApiModel::Response do
       valid_response.build_objects
     end
 
+    let(:empty_response) do
+      valid_response.stub(:json_response_body).and_return nil
+      valid_response.build_objects
+    end
+
     it "should build a single object" do
       single_object.should be_a(BlogPost)
       single_object.name.should eq "foo"
@@ -116,10 +121,13 @@ describe ApiModel::Response do
     it "should include the #json_response_body" do
       single_object.json_response_body.should eq name: "foo"
     end
+
+    it 'should return nil if the api returns an empty body' do
+      empty_response.should be_nil
+    end
   end
 
   describe "passing core methods down to the built class" do
-
     ApiModel::Response::FALL_THROUGH_METHODS.each do |fall_trhough_method|
       it "should pass ##{fall_trhough_method} on the built object class" do
         allow_message_expectations_on_nil
@@ -127,7 +135,52 @@ describe ApiModel::Response do
         valid_response.send fall_trhough_method
       end
     end
+  end
 
+  describe "raising exceptions" do
+    describe "for requests which return a 401" do
+      let :api_request do
+        VCR.use_cassette('errors') do
+          BlogPost.get_json "http://api-model-specs.com/needs_auth"
+        end
+      end
+
+      it 'should raise an ApiModel::UnauthenticatedError if raise_on_unauthenticated is true' do
+        BlogPost.api_config { |c| c.raise_on_unauthenticated = true }
+        expect {
+          api_request
+        }.to raise_error(ApiModel::UnauthenticatedError)
+      end
+
+      it 'should not raise an ApiModel::UnauthenticatedError if raise_on_unauthenticated is false' do
+        BlogPost.api_config { |c| c.raise_on_unauthenticated = false }
+        expect {
+          api_request
+        }.to_not raise_error
+      end
+    end
+
+    describe "for requests which return a 404" do
+      let :api_request do
+        VCR.use_cassette('errors') do
+          BlogPost.get_json "http://api-model-specs.com/not_found"
+        end
+      end
+
+      it 'should raise an ApiModel::NotFoundError if raise_on_not_found is true' do
+        BlogPost.api_config { |c| c.raise_on_not_found = true }
+        expect {
+          api_request
+        }.to raise_error(ApiModel::NotFoundError)
+      end
+
+      it 'should not raise an ApiModel::NotFoundError if raise_on_not_found is false' do
+        BlogPost.api_config { |c| c.raise_on_not_found = false }
+        expect {
+          api_request
+        }.to_not raise_error
+      end
+    end
   end
 
 end

@@ -11,10 +11,14 @@ module ApiModel
 
     def initialize(http_response, config)
       @http_response = http_response
-      @_config = config
+      @_config = config || Configuration.new
     end
 
     def build_objects
+      raise UnauthenticatedError if @_config.raise_on_unauthenticated && http_response.api_call.response_code == 401
+      raise NotFoundError if @_config.raise_on_not_found && http_response.api_call.response_code == 404
+      return if json_response_body.nil?
+
       if response_build_hash.is_a? Array
         self.objects = response_build_hash.collect{ |hash| build http_response.builder, hash }
       elsif response_build_hash.is_a? Hash
@@ -61,7 +65,7 @@ module ApiModel
     # The root for a deeply nested hash will come in as a string with key names split
     # with a colon.
     def response_build_hash
-      if @_config.present? && @_config.json_root.present?
+      if @_config.json_root.present?
         begin
           @_config.json_root.split(".").inject(json_response_body) do |hash,key|
             hash.fetch(key)
