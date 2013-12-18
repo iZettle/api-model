@@ -20,6 +20,11 @@ describe ApiModel do
       post_request = VCR.use_cassette('posts') { BlogPost.post_json "/posts" }
       post_request.http_response.request_method.should eq :post
     end
+
+    it 'should be possible to send a POST request with a hash as body' do
+      post_request = VCR.use_cassette('posts') { BlogPost.post_json "/create_with_json", name: "foobarbaz" }
+      post_request.http_response.api_call.request.options[:body].should eq "{\"name\":\"foobarbaz\"}"
+    end
   end
 
   describe "retrieving a single object" do
