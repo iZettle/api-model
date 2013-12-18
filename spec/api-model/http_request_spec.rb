@@ -16,6 +16,18 @@ describe ApiModel::HttpRequest do
     end
   end
 
+  describe "callbacks" do
+    class ApiModel::HttpRequest
+      before_run :do_something_before_run
+      def do_something_before_run; end
+    end
+
+    it 'should be possible to set callbacks on the run method' do
+      ApiModel::HttpRequest.any_instance.should_receive(:do_something_before_run).once
+      VCR.use_cassette('posts') { BlogPost.get_json "http://api-model-specs.com/single_post"}
+    end
+  end
+
   describe "using api_host" do
     let(:blog_post) do
       BlogPost.api_config do |config|

@@ -6,9 +6,13 @@ module ApiModel
 
     after_initialize :set_default_options
 
+    define_model_callbacks :run
+
     def run
-      self.api_call = Typhoeus.send method, full_path, options
-      Response.new self, config
+      run_callbacks :run do
+        self.api_call = Typhoeus.send method, full_path, options
+        Response.new self, config
+      end
     end
 
     def method
