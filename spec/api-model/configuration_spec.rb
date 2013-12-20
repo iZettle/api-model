@@ -1,11 +1,13 @@
 require 'spec_helper'
 require 'support/mock_models/banana'
 require 'support/mock_models/multiple_hosts'
+require 'support/mock_models/blog_post'
 
 describe ApiModel, "Configuration" do
 
   after(:each) do
     Banana.reset_api_configuration
+    BlogPost.reset_api_configuration
   end
 
   describe "api_host" do
@@ -69,6 +71,40 @@ describe ApiModel, "Configuration" do
   describe "parser" do
     it 'should default to the internal Json parser' do
       ApiModel::Base.api_model_configuration.parser.should be_an_instance_of ApiModel::ResponseParser::Json
+    end
+
+    it 'should be used when handling api responses' do
+      ApiModel::ResponseParser::Json.any_instance.should_receive(:parse).with("{\"name\":\"foo\"}")
+      VCR.use_cassette('posts') { BlogPost.get_json "http://api-model-specs.com/single_post"}
+    end
+
+    class CustomParser
+      def parse(body)
+        { name: "Hello world" }
+      end
+    end
+
+    it 'should be possible to set a custom parser' do
+      BlogPost.api_config { |config| config.parser = CustomParser.new }
+      CustomParser.any_instance.should_receive(:parse).with("{\"name\":\"foo\"}")
+      VCR.use_cassette('posts') { BlogPost.get_json "http://api-model-specs.com/single_post"}
+    end
+  end
+
+  describe "builder" do
+    it 'should defult to nil' do
+      ApiModel::Base.api_model_configuration.builder.should be_nil
+    end
+
+    class CustomBuilder
+      def build(response)
+      end
+    end
+
+    it 'should be possible to set a custom builder' do
+      BlogPost.api_config { |config| config.builder = CustomBuilder.new }
+      CustomBuilder.any_instance.should_receive(:build).with({ "name" => "foo"})
+      VCR.use_cassette('posts') { BlogPost.get_json "http://api-model-specs.com/single_post"}
     end
   end
 

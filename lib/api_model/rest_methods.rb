@@ -12,7 +12,7 @@ module ApiModel
 
     def call_api(method, path, options={})
       request = HttpRequest.new path: path, method: method, config: api_model_configuration
-      request.builder = options.delete(:builder) || self
+      request.builder = options.delete(:builder) || api_model_configuration.builder || self
       request.options.merge! options
       request.run.build_objects
     end
