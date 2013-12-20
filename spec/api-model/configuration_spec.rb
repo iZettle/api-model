@@ -60,6 +60,18 @@ describe ApiModel, "Configuration" do
     end
   end
 
+  describe "cache_strategy" do
+    it 'should default to NoCache' do
+      ApiModel::Base.api_model_configuration.cache_strategy.should eq ApiModel::CacheStrategies::NoCache
+    end
+  end
+
+  describe "parser" do
+    it 'should default to the internal Json parser' do
+      ApiModel::Base.api_model_configuration.parser.should be_an_instance_of ApiModel::ResponseParser::Json
+    end
+  end
+
   it 'should not unset other config values when you set a new one' do
     ApiModel::Base.api_config { |c| c.host = "foo.com" }
     Banana.api_config { |c| c.json_root = "banana" }

@@ -14,14 +14,18 @@ module ApiModel
       @_config = config || Configuration.new
     end
 
+    def metadata
+      @metadata ||= OpenStruct.new
+    end
+
     def build_objects
       raise UnauthenticatedError if @_config.raise_on_unauthenticated && http_response.api_call.response_code == 401
       raise NotFoundError if @_config.raise_on_not_found && http_response.api_call.response_code == 404
-      return if json_response_body.nil?
+      return if response_body.nil?
 
       if response_build_hash.is_a? Array
         self.objects = response_build_hash.collect{ |hash| build http_response.builder, hash }
-      elsif response_build_hash.is_a? Hash
+      else
         self.objects = self.build http_response.builder, response_build_hash
       end
 
@@ -36,11 +40,8 @@ module ApiModel
       end
     end
 
-    def json_response_body
-      @json_response_body ||= JSON.parse http_response.api_call.body
-    rescue JSON::ParserError
-      Log.info "Could not parse JSON response: #{http_response.api_call.body}"
-      return nil
+    def response_body
+      @response_body ||= @_config.parser.parse http_response.api_call.body
     end
 
     # Define common methods which should never be called on this abstract class, and should always be
@@ -59,7 +60,7 @@ module ApiModel
 
     private
 
-    # If the model config defines a json root, use it on the json_response_body
+    # If the model config defines a json root, use it on the response_body
     # to dig down in to the hash.
     #
     # The root for a deeply nested hash will come in as a string with key names split
@@ -67,14 +68,14 @@ module ApiModel
     def response_build_hash
       if @_config.json_root.present?
         begin
-          @_config.json_root.split(".").inject(json_response_body) do |hash,key|
+          @_config.json_root.split(".").inject(response_body) do |hash,key|
             hash.fetch(key)
           end
         rescue
-          raise ResponseBuilderError, "Could not find key #{@_config.json_root} in:\n#{json_response_body}"
+          raise ResponseBuilderError, "Could not find key #{@_config.json_root} in:\n#{response_body}"
         end
       else
-        json_response_body
+        response_body
       end
     end
 

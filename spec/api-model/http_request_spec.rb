@@ -71,4 +71,16 @@ describe ApiModel::HttpRequest do
       request.api_call.success?.should eq true
     end
   end
+
+  describe "cache_id" do
+    it 'should use options and the request path to create an identifier for the cache' do
+      a = ApiModel::HttpRequest.new options: {params: { foo: "bar" } }, path: "/box"
+      a.cache_id.should eq "/boxfoobar"
+    end
+
+    it 'should be overridable' do
+      a = ApiModel::HttpRequest.new options: { params: { foo: "bar" } }, path: "/box", cache_id: "hello"
+      a.cache_id.should eq "hello"
+    end
+  end
 end

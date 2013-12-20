@@ -3,12 +3,15 @@ require 'active_support'
 require 'active_support/core_ext'
 require 'logger'
 require 'hashie'
+require 'ostruct'
 
 require 'api_model/initializer'
 require 'api_model/http_request'
 require 'api_model/response'
 require 'api_model/rest_methods'
 require 'api_model/configuration'
+require 'api_model/cache_stategies/no_cache'
+require 'api_model/response_parser/json'
 
 module ApiModel
   Log = Logger.new STDOUT

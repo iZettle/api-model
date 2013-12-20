@@ -2,7 +2,7 @@ module ApiModel
   class Configuration
     include Initializer
 
-    attr_accessor :host, :json_root, :headers, :raise_on_unauthenticated, :raise_on_not_found
+    attr_accessor :host, :json_root, :headers, :raise_on_unauthenticated, :raise_on_not_found, :cache_strategy, :parser
 
     def self.from_inherited_config(config)
       new config.instance_values.reject {|k,v| v.blank? }
@@ -11,6 +11,14 @@ module ApiModel
     def headers
       @headers ||= {}
       @headers.reverse_merge "Content-Type" => "application/json; charset=utf-8",  "Accept" => "application/json"
+    end
+
+    def cache_strategy
+      @cache_strategy ||= ApiModel::CacheStrategies::NoCache
+    end
+
+    def parser
+      @parser ||= ApiModel::ResponseParser::Json.new
     end
   end
 

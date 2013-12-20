@@ -2,16 +2,22 @@ module ApiModel
   class HttpRequest
     include ApiModel::Initializer
 
-    attr_accessor :path, :method, :options, :api_call, :builder, :config
+    attr_accessor :path, :method, :options, :api_call, :builder, :config, :cache_id
 
     after_initialize :set_default_options
 
     define_model_callbacks :run
 
+    def config
+      @config ||= Configuration.new
+    end
+
     def run
       run_callbacks :run do
-        self.api_call = Typhoeus.send method, full_path, options
-        Response.new self, config
+        config.cache_strategy.new(cache_id).cache do
+          self.api_call = Typhoeus.send method, full_path, options
+          Response.new self, config
+        end
       end
     end
 
@@ -30,6 +36,12 @@ module ApiModel
 
     def request_method
       api_call.request.original_options[:method]
+    end
+
+    def cache_id
+      return @cache_id if @cache_id
+      p = (options[:params] || {}).collect{ |k,v| "#{k}#{v}" }.join("")
+      "#{path}#{p}"
     end
 
     private

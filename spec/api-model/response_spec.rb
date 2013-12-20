@@ -11,19 +11,7 @@ describe ApiModel::Response do
   end
 
   describe "parsing the json body" do
-    it "should produce a hash given valid json" do
-      valid_response.json_response_body.should be_a(Hash)
-      valid_response.json_response_body["name"].should eq "foo"
-    end
 
-    it "should catch errors from parsing invalid json" do
-      valid_response.stub_chain(:http_response, :api_call, :body).and_return "blah"
-      ApiModel::Log.should_receive(:info).with "Could not parse JSON response: blah"
-
-      expect {
-        valid_response.json_response_body
-      }.to_not raise_error
-    end
   end
 
   describe "using a custom json root on the response body" do
@@ -87,17 +75,17 @@ describe ApiModel::Response do
 
   describe "#build_objects" do
     let(:single_object) do
-      valid_response.stub(:json_response_body).and_return name: "foo"
+      valid_response.stub(:response_body).and_return name: "foo"
       valid_response.build_objects
     end
 
     let(:array_of_objects) do
-      valid_response.stub(:json_response_body).and_return [{name: "foo"}, {name: "bar"}]
+      valid_response.stub(:response_body).and_return [{name: "foo"}, {name: "bar"}]
       valid_response.build_objects
     end
 
     let(:empty_response) do
-      valid_response.stub(:json_response_body).and_return nil
+      valid_response.stub(:response_body).and_return nil
       valid_response.build_objects
     end
 
@@ -118,8 +106,8 @@ describe ApiModel::Response do
       single_object.http_response.should be_a(ApiModel::HttpRequest)
     end
 
-    it "should include the #json_response_body" do
-      single_object.json_response_body.should eq name: "foo"
+    it "should include the #response_body" do
+      single_object.response_body.should eq name: "foo"
     end
 
     it 'should return nil if the api returns an empty body' do
