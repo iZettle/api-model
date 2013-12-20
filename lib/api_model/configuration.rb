@@ -2,7 +2,8 @@ module ApiModel
   class Configuration
     include Initializer
 
-    attr_accessor :host, :json_root, :headers, :raise_on_unauthenticated, :raise_on_not_found, :cache_strategy, :parser, :builder
+    attr_accessor :host, :json_root, :headers, :raise_on_unauthenticated, :cache_settings,
+                  :raise_on_not_found, :cache_strategy, :parser, :builder
 
     def self.from_inherited_config(config)
       new config.instance_values.reject {|k,v| v.blank? }
@@ -19,6 +20,11 @@ module ApiModel
 
     def parser
       @parser ||= ApiModel::ResponseParser::Json.new
+    end
+
+    def cache_settings
+      @cache_settings ||= {}
+      @cache_settings.reverse_merge duration: 30.seconds, timeout: 2.seconds
     end
   end
 

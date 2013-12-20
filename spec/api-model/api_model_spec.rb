@@ -127,4 +127,10 @@ describe ApiModel do
     end
   end
 
+  describe "cache_id" do
+    it 'should use options and the request path to create an identifier for the cache' do
+      BlogPost.cache_id("/box", params: { foo: "bar" }).should eq "/boxfoobar"
+    end
+  end
+
 end

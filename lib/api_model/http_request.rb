@@ -14,10 +14,8 @@ module ApiModel
 
     def run
       run_callbacks :run do
-        config.cache_strategy.new(cache_id).cache do
-          self.api_call = Typhoeus.send method, full_path, options
-          Response.new self, config
-        end
+        self.api_call = Typhoeus.send method, full_path, options
+        Response.new self, config
       end
     end
 
@@ -36,12 +34,6 @@ module ApiModel
 
     def request_method
       api_call.request.original_options[:method]
-    end
-
-    def cache_id
-      return @cache_id if @cache_id
-      p = (options[:params] || {}).collect{ |k,v| "#{k}#{v}" }.join("")
-      "#{path}#{p}"
     end
 
     private
