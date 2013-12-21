@@ -30,7 +30,8 @@ Then, let's say the API endpoint /foo returned JSON which looks like `{ "name": 
 Request types and params
 ------------------------
 
-There's a couple of convenience methods to make it simpler to send GET and POST requests, or you can send other request types:
+There's a couple of convenience methods to make it simpler to send GET and POST requests, 
+or you can send other request types:
 
 ```ruby
   # Params will be sent as url params, and options is used for other things which
@@ -100,8 +101,8 @@ to try and build a single object. Likewise, if it is an array, it is assumed to 
   MyModel.get_json("/bar") # => [#<MyModel:0x007 @name="Foo">, #<MyModel:0x007 @name="Bar">]
 ```
 
-You can override the default builder either on a per-call basis using the `:builder` option when making the API call, or by
-using the `api_config` block.
+You can override the default builder either on a per-call basis using the `:builder` option. The class which you
+use as a builder should respond to `#build`, with the instance hash as an argument:
 
 ```ruby
   class MyCustomBuilder
@@ -110,13 +111,130 @@ using the `api_config` block.
     end
   end
 
-  class MyModel < ApiModel::Base
-    api_config do |config|
-      config.builder = MyCustomBuilder.new
-    end
+  MyModel.get_json "/foo", { some_param: "bar" }, builder: MyCustomBuilder.new
+```
 
-    def self.fetch_something
-      get_json "/foo", { some_param: "bar" }, builder: MyCustomBuilder.new
+Configuring API Model
+---------------------
+
+You can configure API model in a number of places; globally using `ApiModel::Base.api_config`, per-model
+using `MyModel.api_config`, and per-api call by passing in options in the options hash (although some 
+configuration options may not be available on the per-api call technique).
+
+Configuration options
+=====================
+
+### API Host
+
+```ruby
+  ApiModel::Base.api_config do |config|
+    config.api_host = "http:://someserver.com"
+  end
+```
+
+This will set the root of all api calls so that you can just use paths in your models instead of having
+to refer to the full url all the time.
+
+### JSON root
+
+```ruby
+  ApiModel::Base.api_config do |config|
+    config.json_root = "data.posts"
+  end
+```
+
+If the API response which you receive is deeply nested and you want to cut out some levels of nesting, you
+can use `json_root` to set which key objects should be built from. 
+
+You can dig down multiple levels by separating keys with a period. With the example above, say the server
+was returning JSON which looked like `{"data":{"posts":{"name":"Foo"}}}`, it would behave as if the
+response was really just `{"name":"Foo"}`.
+
+### Builder
+
+```ruby
+  ApiModel::Base.api_config do |config|
+    config.builder = MyCustomBuilder.new
+  end
+```
+
+Sets a custom builder for all API calls. See [building objects from responses](#building-objects-from-responses)
+for more details on how custom builders should behave.
+
+### Parser
+
+```ruby
+  ApiModel::Base.api_config do |config|
+    config.parser = MyCustomParser.new
+  end
+```
+
+ApiModel is built on the assumption that most modern APIs are JSON-based, but if you need to interact with
+an API which returns something other than JSON, you can set custom parsers to deal with objectifying responses
+before they are sent to builder classes. The parser should work in the same way as a custom builder, except it needs
+to respond to `#parse`, with the raw response body as an argument.
+
+### Raise on not found or unauthenticated
+
+```ruby
+  ApiModel::Base.api_config do |config|
+    config.raise_on_not_found = true
+    config.raise_on_unauthenticated = true
+  end
+```
+
+This will cause any API requests which return a 404 status to raise an ApiModel::NotFoundError exception, and requests
+which return a 401 to raise an ApiModel::UnauthenticatedError exception. Both default to `false`.
+
+### Cache strategy & settings
+
+```ruby
+  ApiModel::Base.api_config do |config|
+    config.cache_strategy = MyCustomCacheStrategy
+    config.cache_settings = { any_custom_settings: 123 }
+  end
+```
+
+Currently, ApiModel has no built-in cache strategy, but provides the interface for you to insert your own caching
+strategy. On each API call, the cache strategy class will be initialized with two arguments; the cache id, which
+is generated from the path and params, and the `cache_settings` which you can define on the config object as
+shown above. It will then call `#cache` with the ApiModel response block. So your custom cache class needs to look
+something like this:
+
+```ruby
+  class MyCustomCacheStrategy
+    attr_accessor :id, :options
+    
+    def initialize(id, options)
+      @id = id
+      @options = options
     end
+    
+    def cache(&block)
+      # here you can check whether you want to actually call the api by running
+      # block.call, or want to find and return your cached response.
+    end
+  end
+```
+
+### Headers
+
+```ruby
+  ApiModel::Base.api_config do |config|
+    config.headers = { some_custom_header: "foo" }
+  end
+```
+
+Adds custom headers to the requests. By default, ApiModel will add these headers:
+
+```ruby
+  { "Content-Type" => "application/json; charset=utf-8",  "Accept" => "application/json" }
+```
+
+These can of course be overridden by just re-defining them in the headers config:
+
+```ruby
+  ApiModel::Base.api_config do |config|
+    config.headers = { "Content-Type" => "application/soap+xml" }
   end
 ```
