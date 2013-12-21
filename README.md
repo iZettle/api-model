@@ -121,9 +121,6 @@ You can configure API model in a number of places; globally using `ApiModel::Bas
 using `MyModel.api_config`, and per-api call by passing in options in the options hash (although some 
 configuration options may not be available on the per-api call technique).
 
-Configuration options
-=====================
-
 ### API Host
 
 ```ruby
