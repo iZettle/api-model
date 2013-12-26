@@ -127,6 +127,27 @@ describe ApiModel do
     end
   end
 
+  describe "setting errors from a hash" do
+    let(:car) { Car.new }
+    let(:blog_post) { BlogPost.new }
+
+    it 'should assign errors from a simple hash using active model errors' do
+      car.set_errors_from_hash name: "Is invalid"
+      car.errors[:name].should eq ["Is invalid"]
+    end
+
+    it 'should assign multiple errors from an array' do
+      car.set_errors_from_hash top_speed: ["is too fast", "would break the sound barrier"]
+      car.errors[:top_speed].size.should eq 2
+    end
+
+    it 'should be possible to assign the errors to other classes' do
+      car.set_errors_from_hash({ name: "is bad" }, blog_post)
+      car.errors.size.should eq 0
+      blog_post.errors[:name].should eq ["is bad"]
+    end
+  end
+
   describe "cache_id" do
     it 'should use options and the request path to create an identifier for the cache' do
       BlogPost.cache_id("/box", params: { foo: "bar" }).should eq "/boxfoobar"

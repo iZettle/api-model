@@ -30,7 +30,7 @@ Then, let's say the API endpoint /foo returned JSON which looks like `{ "name": 
 Request types and params
 ------------------------
 
-There's a couple of convenience methods to make it simpler to send GET and POST requests, 
+There's a couple of convenience methods to make it simpler to send GET and POST requests,
 or you can send other request types:
 
 ```ruby
@@ -114,11 +114,29 @@ use as a builder should respond to `#build`, with the instance hash as an argume
   MyModel.get_json "/foo", { some_param: "bar" }, builder: MyCustomBuilder.new
 ```
 
+Handling validation errors in responses
+---------------------------------------
+
+ApiModel uses a bunch of Rails' ActiveModel enhancements to make it easy to use things such as validation errors.
+You can define validations in the normal ActiveModel::Validations style and check validity before posting
+to external APIs should you wish to. Or, if an external API returns errors which you would like to convert to
+ActiveModel validations, you can do that, too:
+
+```ruby
+  class Car
+    property :name
+  end
+
+  car = Car.new
+  car.set_errors_from_hash name: "cannot be blank"
+  car.errors[:name] # => ["cannot be blank"]
+```
+
 Configuring API Model
 ---------------------
 
 You can configure API model in a number of places; globally using `ApiModel::Base.api_config`, per-model
-using `MyModel.api_config`, and per-api call by passing in options in the options hash (although some 
+using `MyModel.api_config`, and per-api call by passing in options in the options hash (although some
 configuration options may not be available on the per-api call technique).
 
 ### API Host
@@ -141,7 +159,7 @@ to refer to the full url all the time.
 ```
 
 If the API response which you receive is deeply nested and you want to cut out some levels of nesting, you
-can use `json_root` to set which key objects should be built from. 
+can use `json_root` to set which key objects should be built from.
 
 You can dig down multiple levels by separating keys with a period. With the example above, say the server
 was returning JSON which looked like `{"data":{"posts":{"name":"Foo"}}}`, it would behave as if the
@@ -201,12 +219,12 @@ something like this:
 ```ruby
   class MyCustomCacheStrategy
     attr_accessor :id, :options
-    
+
     def initialize(id, options)
       @id = id
       @options = options
     end
-    
+
     def cache(&block)
       # here you can check whether you want to actually call the api by running
       # block.call, or want to find and return your cached response.
