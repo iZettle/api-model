@@ -8,7 +8,7 @@ require 'ostruct'
 require 'api_model/initializer'
 require 'api_model/http_request'
 require 'api_model/response'
-require 'api_model/rest_methods'
+require 'api_model/class_methods'
 require 'api_model/instance_methods'
 require 'api_model/configuration'
 require 'api_model/cache_stategies/no_cache'
@@ -37,7 +37,7 @@ module ApiModel
     extend ActiveModel::Naming
     extend ActiveModel::Callbacks
 
-    extend RestMethods
+    extend ClassMethods
     include ConfigurationMethods
     include InstanceMethods
   end

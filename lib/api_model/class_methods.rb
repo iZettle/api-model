@@ -1,5 +1,5 @@
 module ApiModel
-  module RestMethods
+  module ClassMethods
 
     def get_json(path, params={}, options={})
       call_api :get, path, options.merge(params: params)
