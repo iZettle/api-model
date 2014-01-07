@@ -3,6 +3,7 @@ require 'active_support'
 require 'active_support/core_ext'
 require 'logger'
 require 'hashie'
+require 'typhoeus'
 require 'ostruct'
 
 require 'api_model/initializer'
