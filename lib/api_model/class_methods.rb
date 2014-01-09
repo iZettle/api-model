@@ -6,8 +6,16 @@ module ApiModel
     end
 
     def post_json(path, body=nil, options={})
+      call_api_with_json :post, path, body, options
+    end
+
+    def put_json(path, body=nil, options={})
+      call_api_with_json :put, path, body, options
+    end
+
+    def call_api_with_json(method, path, body=nil, options={})
       body = body.to_json if body.is_a?(Hash)
-      call_api :post, path, options.merge(body: body)
+      call_api method, path, options.merge(body: body)
     end
 
     def call_api(method, path, options={})
