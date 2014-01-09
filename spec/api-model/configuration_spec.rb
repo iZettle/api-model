@@ -64,7 +64,7 @@ describe ApiModel, "Configuration" do
 
   describe "cache_strategy" do
     it 'should default to NoCache' do
-      ApiModel::Base.api_model_configuration.cache_strategy.should eq ApiModel::CacheStrategies::NoCache
+      ApiModel::Base.api_model_configuration.cache_strategy.should eq ApiModel::CacheStrategy::NoCache
     end
   end
 

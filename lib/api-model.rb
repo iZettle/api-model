@@ -12,7 +12,7 @@ require 'api_model/response'
 require 'api_model/class_methods'
 require 'api_model/instance_methods'
 require 'api_model/configuration'
-require 'api_model/cache_stategies/no_cache'
+require 'api_model/cache_stategy/no_cache'
 require 'api_model/response_parser/json'
 
 module ApiModel

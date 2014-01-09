@@ -1,5 +1,5 @@
 module ApiModel
-  module CacheStrategies
+  module CacheStrategy
     class NoCache
 
       def initialize(*args)

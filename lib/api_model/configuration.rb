@@ -15,7 +15,7 @@ module ApiModel
     end
 
     def cache_strategy
-      @cache_strategy ||= ApiModel::CacheStrategies::NoCache
+      @cache_strategy ||= ApiModel::CacheStrategy::NoCache
     end
 
     def parser
