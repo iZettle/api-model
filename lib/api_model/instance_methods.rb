@@ -45,12 +45,6 @@ module ApiModel
       end
     end
 
-    class SomeBuilder
-      def build(response)
-        response
-      end
-    end
-
     # Sends a request to the api to update a resource. If the response was successful, then it will
     # update the instance with any changes which the API has returned. If not, it will set ActiveModel
     # errors.
