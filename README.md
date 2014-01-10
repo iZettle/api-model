@@ -253,3 +253,24 @@ These can of course be overridden by just re-defining them in the headers config
     config.headers = { "Content-Type" => "application/soap+xml" }
   end
 ```
+
+### Logging requests
+
+You can hook onto a callback on the `ApiModel::HttpRequest` class in order to perform tasks before, after or around an
+API request. This is useful for logging requests. For example, if you wanted to add a custom NewRelic tracer, you could
+add the following callback to make external API calls show up nicely in NewRelic:
+
+```ruby
+require 'new_relic/agent/method_tracer'
+
+ApiModel::HttpRequest.class_eval do
+  include NewRelic::Agent::MethodTracer
+  around_run :trace_with_newrelic
+
+  def trace_with_newrelic
+    trace_execution_scoped(["API/#{self.method}/#{self.path}"]) do
+      yield
+    end
+  end
+end
+```
