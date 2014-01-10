@@ -121,9 +121,7 @@ describe ApiModel do
     end
 
     describe "with a single object which has properties which are undefined" do
-      let :new_car do
-        VCR.use_cassette('cars') { Car.get_json "http://cars.com/new_model" }
-      end
+      let(:new_car) { VCR.use_cassette('cars') { Car.get_json "http://cars.com/new_model" } }
 
       it "should not raise an exception" do
         expect {
@@ -244,6 +242,20 @@ describe ApiModel do
   describe "cache_id" do
     it 'should use options and the request path to create an identifier for the cache' do
       BlogPost.cache_id("/box", params: { foo: "bar" }).should eq "/boxfoobar"
+    end
+  end
+
+  describe "successful?" do
+    let(:new_car) { VCR.use_cassette('cars') { Car.get_json "http://cars.com/new_model" } }
+
+    it 'should be true if the api call was successful' do
+      new_car.stub_chain(:http_response, :api_call, :success?).and_return true
+      new_car.successful?.should be_true
+    end
+
+    it 'should be false if the api call was not successful' do
+      new_car.stub_chain(:http_response, :api_call, :success?).and_return false
+      new_car.successful?.should be_false
     end
   end
 

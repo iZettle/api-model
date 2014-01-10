@@ -44,6 +44,10 @@ module ApiModel
       @response_body ||= @_config.parser.parse http_response.api_call.body
     end
 
+    def successful?
+      http_response.api_call.success?
+    end
+
     # Define common methods which should never be called on this abstract class, and should always be
     # passed down to the #objects
     FALL_THROUGH_METHODS.each do |transparent_method|
