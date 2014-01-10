@@ -143,7 +143,7 @@ configuration options may not be available on the per-api call technique).
 
 ```ruby
   ApiModel::Base.api_config do |config|
-    config.api_host = "http:://someserver.com"
+    config.host = "http:://someserver.com"
   end
 ```
 
