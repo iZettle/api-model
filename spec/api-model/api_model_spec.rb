@@ -206,6 +206,13 @@ describe ApiModel do
       VCR.use_cassette('posts') { blog_post.save "/post/2", name: "foobarbaz" }
     end
 
+    it 'should set errors on the instance if the response contains an errors hash' do
+      expect {
+        VCR.use_cassette('posts') { blog_post.save "/post/with_errors", name: "" }
+      }.to change{ blog_post.errors.size }.from(0).to(1)
+      blog_post.errors[:name].should eq ["Cannot be blank"]
+    end
+
     describe "callbacks" do
       class BlogPost
         after_save :saved
@@ -227,11 +234,10 @@ describe ApiModel do
         VCR.use_cassette('posts') { blog_post.save "/post/1" }
       end
 
-      # TODO - come back to this. Apparently something is causing #errors on blog_post to be nil, which makes it explode
-      #it 'should run a callback around the handling of a unsuccessful response' do
-      #  blog_post.should_receive(:oh_no_it_didnt_save).once
-      #  VCR.use_cassette('posts') { blog_post.save "/post/with_errors", name: "" }
-      #end
+      it 'should run a callback around the handling of a unsuccessful response' do
+        blog_post.should_receive(:oh_no_it_didnt_save).once
+        VCR.use_cassette('posts') { blog_post.save "/post/with_errors", name: "" }
+      end
     end
   end
 

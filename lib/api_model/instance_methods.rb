@@ -45,6 +45,12 @@ module ApiModel
       end
     end
 
+    class SomeBuilder
+      def build(response)
+        response
+      end
+    end
+
     # Sends a request to the api to update a resource. If the response was successful, then it will
     # update the instance with any changes which the API has returned. If not, it will set ActiveModel
     # errors.
@@ -55,11 +61,15 @@ module ApiModel
     # It also includes 3 callbacks which you can hook onto; ++save++, which is the entire method, whether
     # the API request was successful or not, and ++successful_save++ and ++unsuccessful_save++ which are
     # triggered on successful or unsuccessful responses.
+    #
+    # By default it uses the ++ApiModel::Builder::Hash++ builder rather than using the normal method of
+    # using the class, or api config builders. This is to avoid building new objects from the response,
+    # but can be easily overriden by passing in ++:builder++ in the options hash.
     def save(path, body=nil, options={})
       request_method = options.delete(:request_method) || :put
 
       run_callbacks :save do
-        response = self.class.call_api_with_json request_method, path, body, options
+        response = self.class.call_api_with_json request_method, path, body, options.reverse_merge(builder: ApiModel::Builder::Hash.new)
         response_success = response.http_response.api_call.success?
 
         if response_success
