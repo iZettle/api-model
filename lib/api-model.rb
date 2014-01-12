@@ -22,6 +22,7 @@ module ApiModel
   class ResponseBuilderError < StandardError; end
   class UnauthenticatedError < StandardError; end
   class NotFoundError < StandardError; end
+  class ServerError < StandardError; end
 
   if defined?(Rails)
     class Railtie < Rails::Railtie

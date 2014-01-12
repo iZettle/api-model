@@ -189,17 +189,19 @@ an API which returns something other than JSON, you can set custom parsers to de
 before they are sent to builder classes. The parser should work in the same way as a custom builder, except it needs
 to respond to `#parse`, with the raw response body as an argument.
 
-### Raise on not found or unauthenticated
+### Raising exceptions
 
 ```ruby
   ApiModel::Base.api_config do |config|
     config.raise_on_not_found = true
     config.raise_on_unauthenticated = true
+    config.raise_on_server_error = true
   end
 ```
 
-This will cause any API requests which return a 404 status to raise an ApiModel::NotFoundError exception, and requests
-which return a 401 to raise an ApiModel::UnauthenticatedError exception. Both default to `false`.
+This will cause any API requests which return a 404 status to raise an ApiModel::NotFoundError exception,
+requests which return 500 to raise an ApiModel::ServerError exception, and requests which return a 401
+to raise an ApiModel::UnauthenticatedError exception. All default to `false`.
 
 ### Cache strategy & settings
 

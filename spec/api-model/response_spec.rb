@@ -169,6 +169,28 @@ describe ApiModel::Response do
         }.to_not raise_error
       end
     end
+
+    describe "for requests which return a 500" do
+      let :api_request do
+        VCR.use_cassette('errors') do
+          BlogPost.get_json "http://api-model-specs.com/server_error"
+        end
+      end
+
+      it 'should raise an ApiModel::ServerError if raise_on_server_error is true' do
+        BlogPost.api_config { |c| c.raise_on_server_error = true }
+        expect {
+          api_request
+        }.to raise_error(ApiModel::ServerError)
+      end
+
+      it 'should not raise an ApiModel::ServerError if raise_on_server_error is false' do
+        BlogPost.api_config { |c| c.raise_on_server_error = false }
+        expect {
+          api_request
+        }.to_not raise_error
+      end
+    end
   end
 
 end

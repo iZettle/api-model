@@ -3,7 +3,7 @@ module ApiModel
     include Initializer
 
     attr_accessor :host, :json_root, :headers, :raise_on_unauthenticated, :cache_settings,
-                  :raise_on_not_found, :cache_strategy, :parser, :builder
+                  :raise_on_not_found, :cache_strategy, :parser, :builder, :raise_on_server_error
 
     def self.from_inherited_config(config)
       new config.instance_values.reject {|k,v| v.blank? }
