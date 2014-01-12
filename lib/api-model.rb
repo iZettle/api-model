@@ -6,6 +6,7 @@ require 'hashie'
 require 'typhoeus'
 require 'ostruct'
 
+require 'api_model/assignment'
 require 'api_model/initializer'
 require 'api_model/http_request'
 require 'api_model/response'
@@ -41,6 +42,7 @@ module ApiModel
     extend ActiveModel::Callbacks
 
     extend ClassMethods
+    include Assignment
     include ConfigurationMethods
     include InstanceMethods
   end

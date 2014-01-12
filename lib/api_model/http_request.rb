@@ -1,6 +1,6 @@
 module ApiModel
   class HttpRequest
-    include ApiModel::Initializer
+    include Initializer
 
     attr_accessor :path, :method, :options, :api_call, :builder, :config, :cache_id
 

@@ -30,21 +30,6 @@ module ApiModel
       end
     end
 
-    # Convenience method to change attributes on an instance en-masse using a hash. This is
-    # useful for when an api response includes changed attributes and you want to update the current
-    # instance with the changes.
-    def update_attributes_from_hash(values={})
-      return unless values.present?
-
-      values.each do |key,value|
-        begin
-          public_send "#{key}=", value
-        rescue
-          Log.debug "Could not set #{key} on #{self.class.name}"
-        end
-      end
-    end
-
     # Sends a request to the api to update a resource. If the response was successful, then it will
     # update the instance with any changes which the API has returned. If not, it will set ActiveModel
     # errors.
@@ -68,7 +53,7 @@ module ApiModel
 
         if response_success
           run_callbacks :successful_save do
-            update_attributes_from_hash response.response_body
+            update_attributes response.response_body
           end
         else
           run_callbacks :unsuccessful_save do

@@ -162,19 +162,19 @@ describe ApiModel do
     it 'should change an existing attribute' do
       car.name = "Chevvy"
       expect {
-        car.update_attributes_from_hash name: "Ford"
+        car.update_attributes name: "Ford"
       }.to change{ car.name }.from("Chevvy").to("Ford")
     end
 
     it 'should set an attribute if unset' do
       expect {
-        car.update_attributes_from_hash number_of_doors: 2
+        car.update_attributes number_of_doors: 2
       }.to change{ car.number_of_doors }.from(nil).to(2)
     end
 
     it 'should log if the attribute is not defined' do
       ApiModel::Log.should_receive(:debug).with "Could not set age on Car"
-      car.update_attributes_from_hash age: 2
+      car.update_attributes age: 2
     end
   end
 
@@ -199,8 +199,8 @@ describe ApiModel do
       VCR.use_cassette('posts') { blog_post.save "/post/2", name: "foobarbaz" }
     end
 
-    it 'should use #update_attributes_from_hash using the response body to update the instance' do
-      blog_post.should_receive(:update_attributes_from_hash).with "name" => "foobarbaz"
+    it 'should use #update_attributes using the response body to update the instance' do
+      blog_post.should_receive(:update_attributes).with "name" => "foobarbaz"
       VCR.use_cassette('posts') { blog_post.save "/post/2", name: "foobarbaz" }
     end
 
