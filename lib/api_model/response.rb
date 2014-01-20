@@ -22,7 +22,7 @@ module ApiModel
       raise UnauthenticatedError if @_config.raise_on_unauthenticated && http_response.api_call.response_code == 401
       raise NotFoundError if @_config.raise_on_not_found && http_response.api_call.response_code == 404
       raise ServerError if @_config.raise_on_server_error && http_response.api_call.response_code == 500
-      return if response_body.nil?
+      return self if response_body.nil?
 
       if response_build_hash.is_a? Array
         self.objects = response_build_hash.collect{ |hash| build http_response.builder, hash }
