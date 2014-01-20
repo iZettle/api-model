@@ -239,6 +239,18 @@ describe ApiModel do
     end
   end
 
+  describe "persistance" do
+    it 'should not be persisted by default' do
+      BlogPost.new.persisted?.should be false
+    end
+
+    it 'should be posible to set an instance as persisted' do
+      blog_post = BlogPost.new
+      blog_post.persisted = true
+      blog_post.persisted?.should be_true
+    end
+  end
+
   describe "cache_id" do
     it 'should use options and the request path to create an identifier for the cache' do
       BlogPost.cache_id("/box", params: { foo: "bar" }).should eq "/boxfoobar"

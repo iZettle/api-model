@@ -5,6 +5,9 @@ module ApiModel
     included do
       extend ActiveModel::Callbacks
       define_model_callbacks :save, :successful_save, :unsuccessful_save
+
+      property :persisted, default: false
+      alias_method :persisted?, :persisted
     end
 
     # Overrides Hashie::Trash to catch errors from trying to set properties which have not been defined
