@@ -14,7 +14,7 @@ module ApiModel
 
     def run
       run_callbacks :run do
-        Log.debug "#{method.to_s.upcase} #{full_path} #{options}"
+        Log.debug "#{method.to_s.upcase} #{full_path} with headers: #{options[:headers]}"
         self.api_call = Typhoeus.send method, full_path, options
         Response.new self, config
       end
