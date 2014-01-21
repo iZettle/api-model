@@ -6,6 +6,8 @@ require 'hashie'
 require 'typhoeus'
 require 'ostruct'
 
+require 'api_model/core_extensions/hash'
+
 require 'api_model/assignment'
 require 'api_model/initializer'
 require 'api_model/http_request'

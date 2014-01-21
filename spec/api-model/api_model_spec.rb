@@ -271,4 +271,10 @@ describe ApiModel do
     end
   end
 
+  describe "class equality" do
+    it 'should not be equal to a Hash even though it is technically a Hash subclass' do
+      (Hash === BlogPost.new).should be_false
+    end
+  end
+
 end
