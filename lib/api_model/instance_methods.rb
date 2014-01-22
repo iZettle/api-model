@@ -49,6 +49,7 @@ module ApiModel
     # but can be easily overriden by passing in ++:builder++ in the options hash.
     def save(path, body=nil, options={})
       request_method = options.delete(:request_method) || :put
+      errors_root = options.delete(:json_errors_root) || self.class.api_model_configuration.json_errors_root
 
       run_callbacks :save do
         response = self.class.call_api_with_json request_method, path, body, options.reverse_merge(builder: ApiModel::Builder::Hash.new)
@@ -60,7 +61,7 @@ module ApiModel
           end
         else
           run_callbacks :unsuccessful_save do
-            set_errors_from_hash response.response_body["errors"]
+            set_errors_from_hash response.fetch_from_body(errors_root)
           end
         end
 

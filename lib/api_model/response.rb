@@ -59,23 +59,32 @@ module ApiModel
       RUBY_EVAL
     end
 
+    # Pass though any method which is not defined to the built objects. This makes the response class
+    # quite transparent, and keeps the response acting like the built object, or array of objects.
     def method_missing(method_name, *args, &block)
       objects.send method_name, *args, &block
+    end
+
+    # Uses a string notation split by colons to fetch nested keys from a hash. For example, if you have a hash
+    # which looks like:
+    #
+    #   { foo: { bar: { baz: "Hello world" } } }
+    #
+    # Then calling ++fetch_from_body("foo.bar.baz")++ would return "Hello world"
+    def fetch_from_body(key_reference)
+      key_reference.split(".").inject(response_body) do |hash,key|
+        hash.fetch(key)
+      end
     end
 
     private
 
     # If the model config defines a json root, use it on the response_body
     # to dig down in to the hash.
-    #
-    # The root for a deeply nested hash will come in as a string with key names split
-    # with a colon.
     def response_build_hash
       if @_config.json_root.present?
         begin
-          @_config.json_root.split(".").inject(response_body) do |hash,key|
-            hash.fetch(key)
-          end
+          fetch_from_body @_config.json_root
         rescue
           raise ResponseBuilderError, "Could not find key #{@_config.json_root} in:\n#{response_body}"
         end

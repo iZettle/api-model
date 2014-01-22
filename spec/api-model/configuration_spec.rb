@@ -36,6 +36,17 @@ describe ApiModel, "Configuration" do
     end
   end
 
+  describe "json_errors_root" do
+    it 'should default to "errors"' do
+      Banana.api_model_configuration.json_errors_root.should eq "errors"
+    end
+
+    it 'should be possible to set on a class' do
+      Banana.api_config { |c| c.json_errors_root = "some.deep.errors" }
+      Banana.api_model_configuration.json_errors_root.should eq "some.deep.errors"
+    end
+  end
+
   describe "headers" do
     it 'should create default headers for content type and accepts' do
       headers = Banana.api_model_configuration.headers

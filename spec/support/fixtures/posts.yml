@@ -222,4 +222,62 @@ http_interactions:
     http_version:
   recorded_at: Thu, 28 Nov 2013 16:02:20 GMT
 
+- request:
+    method: put
+    uri: http://api-model-specs.com/post/with_nested_errors
+    headers:
+      User-Agent:
+      - Typhoeus - https://github.com/typhoeus/typhoeus
+    body:
+      string: "{\"name\":\"\"}"
+  response:
+    status:
+      code: 400
+      message: OK
+    headers:
+      Server:
+      - nginx/1.4.1
+      Date:
+      - Thu, 28 Nov 2013 16:02:56 GMT
+      Content-Type:
+      - text/plain; charset=utf-8
+      Content-Length:
+      - '248'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: "{\"result\":{\"errors\":{\"name\":\"Cannot be blank\"}}}"
+    http_version:
+  recorded_at: Thu, 28 Nov 2013 16:02:20 GMT
+
+- request:
+    method: put
+    uri: http://api-model-specs.com/post/with_different_nested_errors
+    headers:
+      User-Agent:
+      - Typhoeus - https://github.com/typhoeus/typhoeus
+    body:
+      string: "{\"name\":\"\"}"
+  response:
+    status:
+      code: 400
+      message: OK
+    headers:
+      Server:
+      - nginx/1.4.1
+      Date:
+      - Thu, 28 Nov 2013 16:02:56 GMT
+      Content-Type:
+      - text/plain; charset=utf-8
+      Content-Length:
+      - '248'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: "{\"hello\":{\"errors\":{\"name\":\"Cannot be blank\"}}}"
+    http_version:
+  recorded_at: Thu, 28 Nov 2013 16:02:20 GMT
+
 recorded_with: VCR 2.8.0

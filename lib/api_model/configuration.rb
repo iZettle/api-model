@@ -3,7 +3,8 @@ module ApiModel
     include Initializer
 
     attr_accessor :host, :json_root, :headers, :raise_on_unauthenticated, :cache_settings,
-                  :raise_on_not_found, :cache_strategy, :parser, :builder, :raise_on_server_error
+                  :raise_on_not_found, :cache_strategy, :parser, :builder, :raise_on_server_error,
+                  :json_errors_root
 
     def self.from_inherited_config(config)
       new config.instance_values.reject {|k,v| v.blank? }
@@ -25,6 +26,10 @@ module ApiModel
     def cache_settings
       @cache_settings ||= {}
       @cache_settings.reverse_merge duration: 30.seconds, timeout: 2.seconds
+    end
+
+    def json_errors_root
+      @json_errors_root ||= "errors"
     end
   end
 

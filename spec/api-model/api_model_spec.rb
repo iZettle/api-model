@@ -183,6 +183,10 @@ describe ApiModel do
       BlogPost.api_config { |config| config.host = "http://api-model-specs.com" }
     end
 
+    after do
+      BlogPost.reset_api_configuration
+    end
+
     let(:blog_post) { BlogPost.new }
 
     # VCR will blow up if this was not a PUT, so no rspec expectations are needed here...
@@ -207,6 +211,22 @@ describe ApiModel do
     it 'should set errors on the instance if the response contains an errors hash' do
       expect {
         VCR.use_cassette('posts') { blog_post.save "/post/with_errors", name: "" }
+      }.to change{ blog_post.errors.size }.from(0).to(1)
+      blog_post.errors[:name].should eq ["Cannot be blank"]
+    end
+
+    it 'should be possible to change the error root when making the save call' do
+      expect {
+        VCR.use_cassette('posts') { blog_post.save "/post/with_nested_errors", {name: ""}, json_errors_root: "result.errors" }
+      }.to change{ blog_post.errors.size }.from(0).to(1)
+      blog_post.errors[:name].should eq ["Cannot be blank"]
+    end
+
+    it 'should respect the class default error root if one was not defined in the save call' do
+      BlogPost.api_config { |c| c.json_errors_root = "hello.errors" }
+
+      expect {
+        VCR.use_cassette('posts') { blog_post.save "/post/with_different_nested_errors", name: "" }
       }.to change{ blog_post.errors.size }.from(0).to(1)
       blog_post.errors[:name].should eq ["Cannot be blank"]
     end
