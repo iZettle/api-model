@@ -56,9 +56,15 @@ describe ApiModel, "Configuration" do
       headers.should have_key "Content-Type"
     end
 
-    it 'should be possible to override default headers' do
+    it 'should be possible to override default headers through ApiModel::Base' do
       ApiModel::Base.api_config { |config| config.headers = { "Accept" => "image/gif" } }
       Banana.api_model_configuration.headers["Accept"].should eq "image/gif"
+    end
+
+    it 'should be possible to override custom headers through subclasses of ApiModel::Base' do
+      ApiModel::Base.api_config { |config| config.headers = { "Accept" => "image/gif" } }
+      Banana.api_config { |config| config.headers = { "Accept" => "application/x-www-form-urlencoded" } }
+      Banana.api_model_configuration.headers["Accept"].should eq "application/x-www-form-urlencoded"
     end
   end
 
