@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    api-model (1.0.0)
+    api-model (1.0.1)
       activemodel
       activesupport
       hashie
