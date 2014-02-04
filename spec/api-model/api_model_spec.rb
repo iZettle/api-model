@@ -154,6 +154,10 @@ describe ApiModel do
       car.errors.size.should eq 0
       blog_post.errors[:name].should eq ["is bad"]
     end
+
+    it 'should return false if errors is not a hash' do
+      car.set_errors_from_hash("Foobar").should be_false
+    end
   end
 
   describe "updating attributes from a hash" do

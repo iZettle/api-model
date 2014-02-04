@@ -22,6 +22,8 @@ module ApiModel
     # Convenience method to handle error hashes and set them as ActiveModel errors on instances.
     # Using the `obj`, you can move the errors on to child classes if needed.
     def set_errors_from_hash(errors_hash, obj = self)
+      return false unless errors_hash.is_a? Hash
+
       errors_hash.each do |field,messages|
         if messages.is_a?(Array)
           messages.each do |message|
