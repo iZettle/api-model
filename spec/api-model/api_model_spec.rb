@@ -119,20 +119,6 @@ describe ApiModel do
         cars.last.name.should eq "Ford"
       end
     end
-
-    describe "with a single object which has properties which are undefined" do
-      let(:new_car) { VCR.use_cassette('cars') { Car.get_json "http://cars.com/new_model" } }
-
-      it "should not raise an exception" do
-        expect {
-          new_car
-        }.to_not raise_error
-      end
-
-      it 'should define the missing property on the fly' do
-        new_car.shiney.should eq true
-      end
-    end
   end
 
   describe "setting errors from a hash" do

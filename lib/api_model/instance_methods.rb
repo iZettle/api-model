@@ -15,8 +15,7 @@ module ApiModel
     def property_exists?(property_name)
       super property_name
     rescue NoMethodError
-      Log.debug "Could not set #{property_name} on #{self.class.name}. Defining it now."
-      self.class.property property_name.to_sym
+      Log.debug "Could not set #{property_name} on #{self.class.name}"
     end
 
     # Convenience method to handle error hashes and set them as ActiveModel errors on instances.
