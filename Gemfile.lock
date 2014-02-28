@@ -2,10 +2,10 @@ PATH
   remote: .
   specs:
     api-model (1.1.0)
-      activemodel (~> 4.0.3)
-      activesupport (~> 4.0.3)
-      hashie (~> 2.0.5)
-      typhoeus (~> 0.6.7)
+      activemodel (~> 4.0)
+      activesupport (~> 4.0)
+      hashie (~> 2.0)
+      typhoeus (~> 0.6)
 
 GEM
   remote: https://rubygems.org/
@@ -65,7 +65,7 @@ PLATFORMS
 
 DEPENDENCIES
   api-model!
-  pry
-  rspec
-  vcr
+  pry (~> 0.9)
+  rspec (~> 2.14)
+  vcr (= 2.8.0)
   webmock (= 1.15.0)
