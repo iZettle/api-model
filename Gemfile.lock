@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    api-model (1.1.1)
+    api-model (1.1.2)
       activemodel (~> 4.0)
       activesupport (~> 4.0)
       hash-pipe (~> 0.0)
