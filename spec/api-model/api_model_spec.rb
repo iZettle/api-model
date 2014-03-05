@@ -287,4 +287,25 @@ describe ApiModel do
     end
   end
 
+  describe "properties_hash" do
+    let(:blog_post) { BlogPost.new title: "Foo", name: "Bar", something_else: "Baz" }
+
+    it 'should return a hash' do
+      blog_post.properties_hash.should be_a(Hash)
+    end
+
+    it 'should include attributes which are defined as properties' do
+      blog_post.properties_hash.should have_key(:title)
+      blog_post.properties_hash.should have_key(:name)
+    end
+
+    it 'should not include attributes which are not defined as properties' do
+      blog_post.properties_hash.should_not have_key(:something_else)
+    end
+
+    it 'should not include the :persisted property, even though it is defined' do
+      blog_post.properties_hash.should_not have_key(:persisted)
+    end
+  end
+
 end

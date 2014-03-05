@@ -5,6 +5,7 @@ require 'logger'
 require 'hashie'
 require 'typhoeus'
 require 'ostruct'
+require 'hash-pipe'
 
 require 'api_model/core_extensions/hash'
 require 'api_model/core_extensions/hashie'

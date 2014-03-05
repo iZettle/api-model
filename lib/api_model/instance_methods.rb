@@ -70,5 +70,12 @@ module ApiModel
       end
     end
 
+    # Returns all the defined properties in a hash without the :persisted property which was added automatically.
+    #
+    # This is useful for when you need to pass the entire object back to an API, or if you want to serialize the object.
+    def properties_hash
+      self.to_hash.only(*self.class.properties.to_a).except(:persisted).with_indifferent_access
+    end
+
   end
 end
