@@ -28,12 +28,12 @@ describe ApiModel do
 
     it 'should be possible to send a POST request with a hash as body' do
       post_request = VCR.use_cassette('posts') { BlogPost.post_json "/create_with_json", name: "foobarbaz" }
-      post_request.http_response.api_call.request.options[:body].should eq "{\"name\":\"foobarbaz\"}"
+      post_request.http_response.request_adapter.request_body.should eq "{\"name\":\"foobarbaz\"}"
     end
 
     it 'should be possible to send a PUT request with a hash as body' do
       post_request = VCR.use_cassette('posts') { BlogPost.put_json "/post/1", name: "foobarbaz" }
-      post_request.http_response.api_call.request.options[:body].should eq "{\"name\":\"foobarbaz\"}"
+      post_request.http_response.request_adapter.request_body.should eq "{\"name\":\"foobarbaz\"}"
     end
   end
 
@@ -271,12 +271,12 @@ describe ApiModel do
     let(:new_car) { VCR.use_cassette('cars') { Car.get_json "http://cars.com/new_model" } }
 
     it 'should be true if the api call was successful' do
-      new_car.stub_chain(:http_response, :api_call, :success?).and_return true
+      new_car.stub_chain(:http_response, :response, :success?).and_return true
       new_car.successful?.should be_true
     end
 
     it 'should be false if the api call was not successful' do
-      new_car.stub_chain(:http_response, :api_call, :success?).and_return false
+      new_car.stub_chain(:http_response, :response, :success?).and_return false
       new_car.successful?.should be_false
     end
   end

@@ -3,8 +3,8 @@ module ApiModel
     include Initializer
 
     attr_accessor :host, :json_root, :headers, :raise_on_unauthenticated, :cache_settings,
-                  :raise_on_not_found, :cache_strategy, :parser, :builder, :raise_on_server_error,
-                  :json_errors_root
+                  :raise_on_not_found, :cache_strategy, :request_adapter, :parser, :builder,
+                  :raise_on_server_error, :json_errors_root
 
     def self.from_inherited_config(config)
       new config.instance_values.reject {|k,v| v.blank? }
@@ -17,6 +17,10 @@ module ApiModel
 
     def cache_strategy
       @cache_strategy ||= ApiModel::CacheStrategy::NoCache
+    end
+
+    def request_adapter
+      @request_adapter ||= ApiModel::RequestAdapter::Typhoeus
     end
 
     def parser

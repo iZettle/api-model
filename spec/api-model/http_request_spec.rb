@@ -40,7 +40,7 @@ describe ApiModel::HttpRequest do
     end
 
     it "should be used with #path to generate a #full_path" do
-      blog_post.http_response.api_call.request.url.should eq "http://api-model-specs.com/single_post"
+      blog_post.http_response.request_adapter.request_url.should eq "http://api-model-specs.com/single_post"
     end
   end
 
@@ -48,7 +48,7 @@ describe ApiModel::HttpRequest do
     let :request_headers do
       BlogPost.api_config { |config| config.host = "http://api-model-specs.com" }
       blog_post = VCR.use_cassette('posts') { BlogPost.get_json "/single_post" }
-      blog_post.http_response.api_call.request.options[:headers]
+      blog_post.http_response.request_adapter.request_headers
     end
 
     it 'should use the default content type header' do
@@ -68,7 +68,7 @@ describe ApiModel::HttpRequest do
         request.run
       end
 
-      request.api_call.success?.should eq true
+      request.response.success?.should eq true
     end
   end
 end

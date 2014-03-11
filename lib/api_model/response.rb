@@ -19,9 +19,9 @@ module ApiModel
     end
 
     def build_objects
-      raise UnauthenticatedError if @_config.raise_on_unauthenticated && http_response.api_call.response_code == 401
-      raise NotFoundError if @_config.raise_on_not_found && http_response.api_call.response_code == 404
-      raise ServerError if @_config.raise_on_server_error && http_response.api_call.response_code == 500
+      raise UnauthenticatedError if @_config.raise_on_unauthenticated && http_response.response.code == 401
+      raise NotFoundError if @_config.raise_on_not_found && http_response.response.code == 404
+      raise ServerError if @_config.raise_on_server_error && http_response.response.code == 500
       return self if response_body.nil?
 
       if response_build_hash.is_a? Array
@@ -42,11 +42,11 @@ module ApiModel
     end
 
     def response_body
-      @response_body ||= @_config.parser.parse http_response.api_call.body
+      @response_body ||= @_config.parser.parse http_response.body
     end
 
     def successful?
-      http_response.api_call.success?
+      http_response.response.success?
     end
 
     # Define common methods which should never be called on this abstract class, and should always be

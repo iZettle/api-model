@@ -54,7 +54,7 @@ module ApiModel
 
       run_callbacks :save do
         response = self.class.call_api_with_json request_method, path, body, options.reverse_merge(builder: ApiModel::Builder::Hash.new)
-        response_success = response.http_response.api_call.success?
+        response_success = response.http_response.success?
 
         if response_success
           run_callbacks :successful_save do
