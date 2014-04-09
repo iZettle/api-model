@@ -1,6 +1,6 @@
 class BlogPost < ApiModel::Base
-  property :name
-  property :title
+  attribute :name, String
+  attribute :title, String
 
   class CustomBuilder
     def build(hash)

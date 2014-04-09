@@ -12,11 +12,11 @@ A really simple example
 
 To turn any class into an API model, it must inherit ApiModel::Base. If you want to
 make attributes which will get automatically set from api responses, you can define them
-as properties..
+as attributes..
 
 ``` ruby
   class MyModel < ApiModel::Base
-    property :name
+    attribute :name, String
   end
 ```
 
@@ -47,45 +47,26 @@ or you can send other request types:
   call_api :put, url, options
 ```
 
-Model properties
+Model attributes
 ----------------
 
-The properties which you can define on models are extended from the [Hashie](https://github.com/intridea/hashie#trash)
-gem. You can use them to define simple attributes, but also for converting attributes from one name to another, or for
-transforming the values as they are set. This is useful for dealing with APIs which use a different naming scheme
-than you are using, or if you need to modify values as they come in.
+The attributes which you can define on models are included from the [Virtus](https://github.com/solnic/virtus)
+gem. You can use them to define simple attributes, coercing values as they come in, or just type-casting. Be sure
+to check out the Virtus docs for more info on what can be achieved.
 
-### Translation
+To make it easier to work with APIs which have different naming schemes from your models, you can define attribute
+synonyms, which are really just simple aliases.
 
-```ruby
-  class MyModel < ApiModel::Base
-    property :full_name, from: :fullName
-  end
-
-  MyModel.new(fullName: "Hello").full_name # => "Hello"
-```
-
-### Transformation
+For example, say you have a `Car` model which has a `number_of_wheels` attribute but with the APIs you're using, sometimes
+it the attribute is named `numberOfWheels`, sometimes it's `nrOfWheels` and sometimes it's `wheel_count`, you can easily handle
+them all at once:
 
 ```ruby
-  class MyModel < ApiModel::Base
-    property :created_at, from: :timestamp, with: lambda { |t| Time.at(t) }
+  class Car < ApiModel::Base
+    attribute :number_of_wheels, Integer
+    attribute_synonym :number_of_wheels, :numberOfWheels, :nrOfWheels, :wheel_count
   end
-
-  MyModel.new(timestamp: 1387550991).created_at # => 2013-12-20 15:49:51 +0100
 ```
-
-### Defaults
-
-```ruby
-  class MyModel < ApiModel::Base
-    property :name, default: "FooBar"
-  end
-
-  MyModel.new.name # => "FooBar"
-```
-
-For more information, check out the [Hashie::Trash docs](https://github.com/intridea/hashie#trash).
 
 Building objects from responses
 -------------------------------
@@ -124,7 +105,7 @@ ActiveModel validations, you can do that, too:
 
 ```ruby
   class Car
-    property :name
+    attribute :name, String
   end
 
   car = Car.new

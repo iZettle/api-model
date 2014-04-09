@@ -65,7 +65,7 @@ describe ApiModel do
     end
   end
 
-  describe "using Hashie to build with properties" do
+  describe "using Virtus to build with attribute coercion" do
     describe "with a single object response" do
       let :car do
         VCR.use_cassette('cars') { Car.get_json "http://cars.com/one_convertable" }
@@ -118,6 +118,23 @@ describe ApiModel do
         cars.first.name.should eq "Ferrari"
         cars.last.name.should eq "Ford"
       end
+    end
+  end
+
+  describe "defining attribute synonyms" do
+    let(:car) { Car.new }
+
+    it 'should have defined method aliases for numberOfDoors and nrOfDoors' do
+      car.numberOfDoors = 10
+      car.number_of_doors.should eq 10
+
+      car.nrOfDoors = 20
+      car.number_of_doors.should eq 20
+    end
+
+    it 'should still use Virtus coersion when using an alias' do
+      car.max_speed = 10
+      car.top_speed.should eq 100 # the coersion is doing * 10
     end
   end
 
@@ -281,12 +298,6 @@ describe ApiModel do
     end
   end
 
-  describe "class equality" do
-    it 'should not be equal to a Hash even though it is technically a Hash subclass' do
-      (Hash === BlogPost.new).should be_false
-    end
-  end
-
   describe "properties_hash" do
     let(:blog_post) { BlogPost.new title: "Foo", name: "Bar", something_else: "Baz" }
 
@@ -303,7 +314,7 @@ describe ApiModel do
       blog_post.properties_hash.should_not have_key(:something_else)
     end
 
-    it 'should not include the :persisted property, even though it is defined' do
+    it 'should not include the :persisted attribute, even though it is defined' do
       blog_post.properties_hash.should_not have_key(:persisted)
     end
   end

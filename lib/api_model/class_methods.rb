@@ -1,6 +1,13 @@
 module ApiModel
   module ClassMethods
 
+    # TODO - try to think of a more memorable name for this...
+    def attribute_synonym(primary_method_name, *alternate_names)
+      alternate_names.each do |alternate_name|
+        alias_method "#{alternate_name}=".to_sym, "#{primary_method_name}=".to_sym
+      end
+    end
+
     def get_json(path, params={}, options={})
       call_api :get, path, options.merge(params: params)
     end

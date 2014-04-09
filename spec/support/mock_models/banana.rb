@@ -1,5 +1,5 @@
 class Banana < ApiModel::Base
-  property :color
-  property :size
-  property :ripe
+  attribute :color, String
+  attribute :size, String
+  attribute :ripe, Boolean
 end

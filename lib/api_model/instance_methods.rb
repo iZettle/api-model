@@ -6,16 +6,8 @@ module ApiModel
       extend ActiveModel::Callbacks
       define_model_callbacks :save, :successful_save, :unsuccessful_save
 
-      property :persisted, default: false
+      attribute :persisted, Axiom::Types::Boolean, default: false
       alias_method :persisted?, :persisted
-    end
-
-    # Overrides Hashie::Trash to catch errors from trying to set properties which have not been defined
-    # and defines it automatically
-    def property_exists?(property_name)
-      super property_name
-    rescue NoMethodError
-      Log.debug "Could not set #{property_name} on #{self.class.name}"
     end
 
     # Convenience method to handle error hashes and set them as ActiveModel errors on instances.
@@ -70,11 +62,11 @@ module ApiModel
       end
     end
 
-    # Returns all the defined properties in a hash without the :persisted property which was added automatically.
+    # Returns all the defined attributes in a hash without the :persisted attribute which was added automatically.
     #
     # This is useful for when you need to pass the entire object back to an API, or if you want to serialize the object.
     def properties_hash
-      self.to_hash.only(*self.class.properties.to_a).except(:persisted).with_indifferent_access
+      self.to_hash.only(*self.class.attribute_set.collect(&:name)).except(:persisted).with_indifferent_access
     end
 
   end

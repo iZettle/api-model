@@ -1,8 +1,16 @@
-class Car < ApiModel::Base
+class CarTopSpeed < Virtus::Attribute
+  def coerce(value)
+    value * 10 if value
+  end
+end
 
-  property :number_of_doors, from: :numberOfDoors
-  property :top_speed, transform_with: lambda { |speed| speed * 10 }
-  property :name, default: "Ferrari"
+class Car < ApiModel::Base
+  attribute :number_of_doors, Integer
+  attribute :top_speed, CarTopSpeed
+  attribute :name, String, default: "Ferrari"
+
+  attribute_synonym :number_of_doors, :numberOfDoors, :nrOfDoors
+  attribute_synonym :top_speed, :max_speed
 
   def is_fast?
     top_speed > 300

@@ -2,13 +2,10 @@ require 'active_model'
 require 'active_support'
 require 'active_support/core_ext'
 require 'logger'
-require 'hashie'
+require 'virtus'
 require 'typhoeus'
 require 'ostruct'
 require 'hash-pipe'
-
-require 'api_model/core_extensions/hash'
-require 'api_model/core_extensions/hashie'
 
 require 'api_model/assignment'
 require 'api_model/initializer'
@@ -38,7 +35,9 @@ module ApiModel
     end
   end
 
-  class Base < Hashie::Trash
+  class Base
+    include Virtus.model
+
     include ActiveModel::Conversion
     include ActiveModel::Validations
     include ActiveModel::Serialization

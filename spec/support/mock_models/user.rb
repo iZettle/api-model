@@ -1,4 +1,4 @@
 class User < ApiModel::Base
-  property :name
-  property :email_address
+  attribute :name, String
+  attribute :email_address, String
 end
