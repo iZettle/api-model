@@ -2,11 +2,11 @@ PATH
   remote: .
   specs:
     api-model (1.1.2)
-      activemodel (~> 4.0)
-      activesupport (~> 4.0)
+      activemodel (~> 4.1)
+      activesupport (~> 4.1)
       hash-pipe (~> 0.0)
       typhoeus (~> 0.6)
-      virtus
+      virtus (~> 1.0)
 
 GEM
   remote: https://rubygems.org/
