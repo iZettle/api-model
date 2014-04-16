@@ -2,7 +2,7 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "api-model"
-  s.version     = "2.0.0"
+  s.version     = "2.0.1"
   s.authors     = ["Damien Timewell"]
   s.email       = ["mail@damientimewell.com"]
   s.licenses    = ['MIT']
