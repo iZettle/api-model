@@ -243,10 +243,12 @@ describe ApiModel do
         after_save :saved
         after_successful_save :yay_it_saved
         after_unsuccessful_save :oh_no_it_didnt_save
+        after_initialize :initialized
 
         def saved; end
         def yay_it_saved; end
         def oh_no_it_didnt_save; end
+        def initialized; end
       end
 
       it 'should run a callback around the whole save method' do
@@ -262,6 +264,11 @@ describe ApiModel do
       it 'should run a callback around the handling of a unsuccessful response' do
         blog_post.should_receive(:oh_no_it_didnt_save).once
         VCR.use_cassette('posts') { blog_post.save "/post/with_errors", name: "" }
+      end
+
+      it 'should run a callback on initialize' do
+        BlogPost.any_instance.should_receive(:initialized).once
+        BlogPost.new
       end
     end
   end

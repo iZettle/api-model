@@ -4,10 +4,16 @@ module ApiModel
 
     included do
       extend ActiveModel::Callbacks
-      define_model_callbacks :save, :successful_save, :unsuccessful_save
+      define_model_callbacks :save, :successful_save, :unsuccessful_save, :initialize
 
       attribute :persisted, Axiom::Types::Boolean, default: false
       alias_method :persisted?, :persisted
+    end
+
+    def initialize(attributes = nil)
+      run_callbacks :initialize do
+        super attributes
+      end
     end
 
     # Convenience method to handle error hashes and set them as ActiveModel errors on instances.
