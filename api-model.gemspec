@@ -2,9 +2,9 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "api-model"
-  s.version     = "2.0.1"
-  s.authors     = ["Damien Timewell"]
-  s.email       = ["mail@damientimewell.com"]
+  s.version     = "2.1.0"
+  s.authors     = ["Damien Timewell", "Erik Rothoff Andersson"]
+  s.email       = ["mail@damientimewell.com", "erik.rothoff@gmail.com"]
   s.licenses    = ['MIT']
   s.homepage    = "https://github.com/iZettle/api-model"
   s.summary     = "A simple way of interacting with rest APIs"
