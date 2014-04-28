@@ -6,7 +6,12 @@ module ApiModel
       extend ActiveModel::Callbacks
       define_model_callbacks :save, :successful_save, :unsuccessful_save, :initialize
 
-      attribute :persisted, Axiom::Types::Boolean, default: false
+      attr_writer :persisted
+
+      def persisted
+        @persisted || false
+      end
+
       alias_method :persisted?, :persisted
     end
 
@@ -72,7 +77,8 @@ module ApiModel
     #
     # This is useful for when you need to pass the entire object back to an API, or if you want to serialize the object.
     def properties_hash
-      self.to_hash.only(*self.class.attribute_set.collect(&:name)).except(:persisted).with_indifferent_access
+      ActiveSupport::Deprecation.warn "properties_hash() is deprecated and may be removed from future releases, use as_json() instead.", caller
+      self.as_json.with_indifferent_access
     end
 
   end
