@@ -61,7 +61,7 @@ module ApiModel
 
         if response_success
           run_callbacks :successful_save do
-            update_attributes response.response_body
+            update_attributes response.response_build_hash
           end
         else
           run_callbacks :unsuccessful_save do

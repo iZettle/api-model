@@ -77,8 +77,6 @@ module ApiModel
       end
     end
 
-    private
-
     # If the model config defines a json root, use it on the response_body
     # to dig down in to the hash.
     def response_build_hash

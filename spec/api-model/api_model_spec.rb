@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'support/mock_models/blog_post'
 require 'support/mock_models/car'
+require 'support/mock_models/user'
 
 describe ApiModel do
 
@@ -188,10 +189,12 @@ describe ApiModel do
   describe "saving changes on an instance" do
     before do
       BlogPost.api_config { |config| config.host = "http://api-model-specs.com" }
+      User.api_config { |c| c.json_root = "users" }
     end
 
     after do
       BlogPost.reset_api_configuration
+      User.reset_api_configuration
     end
 
     let(:blog_post) { BlogPost.new }
@@ -213,6 +216,14 @@ describe ApiModel do
     it 'should use #update_attributes using the response body to update the instance' do
       blog_post.should_receive(:update_attributes).with "name" => "foobarbaz"
       VCR.use_cassette('posts') { blog_post.save "/post/2", name: "foobarbaz" }
+    end
+
+    it 'should use the config.json_root value when updating attributes' do
+      user = User.new
+
+      expect {
+        VCR.use_cassette('users') { user.save "http://api-model-specs.com/create" }
+      }.to change{ user.name }.from(nil).to("foo")
     end
 
     it 'should set errors on the instance if the response contains an errors hash' do
