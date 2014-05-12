@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    api-model (2.1.0)
+    api-model (2.1.1)
       activemodel (~> 4.1)
       activesupport (~> 4.1)
       hash-pipe (~> 0.0)
@@ -11,10 +11,10 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (4.1.0)
-      activesupport (= 4.1.0)
+    activemodel (4.1.1)
+      activesupport (= 4.1.1)
       builder (~> 3.1)
-    activesupport (4.1.0)
+    activesupport (4.1.1)
       i18n (~> 0.6, >= 0.6.9)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
