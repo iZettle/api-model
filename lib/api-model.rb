@@ -6,6 +6,7 @@ require 'virtus'
 require 'typhoeus'
 require 'ostruct'
 require 'hash-pipe'
+require 'http-cookie'
 
 require 'api_model/assignment'
 require 'api_model/initializer'

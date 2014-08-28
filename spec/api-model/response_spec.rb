@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'support/mock_models/blog_post'
 require 'support/mock_models/user'
+require 'support/mock_models/banana'
 
 describe ApiModel::Response do
 
@@ -189,6 +190,23 @@ describe ApiModel::Response do
         expect {
           api_request
         }.to_not raise_error
+      end
+    end
+  end
+
+  describe "Cookies" do
+    let(:cookie_response) do
+      VCR.use_cassette('cookies') do
+        ApiModel::HttpRequest.new(path: "http://api-model-specs.com/cookie", method: :get, builder: Banana).run
+      end
+    end
+
+    describe "fetching Set-Cookie headers" do
+      it 'should return an array of cookies' do
+        cookie_response.response_cookies.should be_a(Array)
+        cookie_response.response_cookies.map do |cookie|
+          cookie.should be_a(HTTP::Cookie)
+        end
       end
     end
   end

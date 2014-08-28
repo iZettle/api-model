@@ -1,0 +1,30 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://api-model-specs.com/cookie
+    headers:
+      User-Agent:
+      - Typhoeus - https://github.com/typhoeus/typhoeus
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.4.1
+      Date:
+      - Thu, 28 Nov 2013 16:02:56 GMT
+      Content-Type:
+      - text/plain; charset=utf-8
+      Content-Length:
+      - '248'
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - SESSION_ID=abc123; Path=/foo; HttpOnly, foo=bar; Path=/bar; HttpOnly
+    body:
+      encoding: UTF-8
+      string: "{}"
+    http_version:
+  recorded_at: Thu, 28 Nov 2013 16:02:20 GMT
