@@ -50,13 +50,14 @@ module ApiModel
     end
 
     def response_cookies
+      return @cookies if @cookies.present?
       jar = HTTP::CookieJar.new
 
       http_response.api_call.headers_hash["Set-Cookie"].split(", ").each do |cookie|
         jar.parse cookie, http_response.api_call.request.base_url
       end
 
-      jar.cookies
+      @cookies = jar.cookies
     end
 
     # Define common methods which should never be called on this abstract class, and should always be
