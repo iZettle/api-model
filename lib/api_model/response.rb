@@ -53,7 +53,10 @@ module ApiModel
       return @cookies if @cookies.present?
       jar = HTTP::CookieJar.new
 
-      http_response.api_call.headers_hash["Set-Cookie"].split(", ").each do |cookie|
+      set_cookie = http_response.api_call.headers_hash["Set-Cookie"]
+      set_cookie = set_cookie.split(", ") unless set_cookie.is_a?(Array)
+
+      set_cookie.each do |cookie|
         jar.parse cookie, http_response.api_call.request.base_url
       end
 
