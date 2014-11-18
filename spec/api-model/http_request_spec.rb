@@ -58,6 +58,17 @@ describe ApiModel::HttpRequest do
     it 'should use the default accept header' do
       request_headers["Accept"].should eq ApiModel::Configuration.new.headers["Accept"]
     end
+
+    it 'should retain the default headers when making requests with custom headers added' do
+      BlogPost.api_config { |config| config.host = "http://api-model-specs.com" }
+      custom_headers = { headers: { "Custom" => "Header" } }
+      blog_post = VCR.use_cassette('posts') { BlogPost.get_json "/single_post", {}, custom_headers }
+      headers = blog_post.http_response.api_call.request.options[:headers]
+
+      headers.should have_key "Custom"
+      headers.should have_key "Accept"
+      headers.should have_key "Content-Type"
+    end
   end
 
   describe "sending a GET request" do
