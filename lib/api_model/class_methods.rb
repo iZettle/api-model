@@ -29,7 +29,7 @@ module ApiModel
       cache cache_id(path, options) do
         request = HttpRequest.new path: path, method: method, config: api_model_configuration
         request.builder = options.delete(:builder) || api_model_configuration.builder || self
-        request.options.merge! options
+        request.options.deep_merge! options
         request.run.build_objects
       end
     end
