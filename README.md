@@ -215,6 +215,13 @@ something like this:
   end
 ```
 
+By default, the unique id for the cache store/fetch will be a combination of the path and parameters. If you want to override
+this, you can either redefine the `cache_id` method, or set the cache_id when making requests:
+
+```ruby
+  MyModel.get_json "/foo", { some_param: "bar" }, cache_id: "whatever!"
+```
+
 ### Headers
 
 ```ruby

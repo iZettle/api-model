@@ -296,9 +296,20 @@ describe ApiModel do
     end
   end
 
-  describe "cache_id" do
-    it 'should use options and the request path to create an identifier for the cache' do
+  describe "caching" do
+    it 'should use options and the request path to create an identifier for the cache_id' do
       BlogPost.cache_id("/box", params: { foo: "bar" }).should eq "/boxfoobar"
+    end
+
+    it 'should use a custom cache key instead of the cache_id if it is present' do
+      BlogPost.should_not_receive :cache_id
+      VCR.use_cassette('posts') { BlogPost.get_json "http://api-model-specs.com/single_post", {}, cache_id: "custom_key" }
+    end
+
+    it 'should not pass custom cache_ids onto api requests' do
+      expect {
+        VCR.use_cassette('posts') { BlogPost.get_json "http://api-model-specs.com/single_post", {}, cache_id: "custom_key" }
+      }.to_not raise_error(Ethon::Errors::InvalidOption)
     end
   end
 

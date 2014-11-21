@@ -1,7 +1,6 @@
 module ApiModel
   module ClassMethods
 
-    # TODO - try to think of a more memorable name for this...
     def attribute_synonym(primary_method_name, *alternate_names)
       alternate_names.each do |alternate_name|
         alias_method "#{alternate_name}=".to_sym, "#{primary_method_name}=".to_sym
@@ -26,7 +25,7 @@ module ApiModel
     end
 
     def call_api(method, path, options={})
-      cache cache_id(path, options) do
+      cache options.delete(:cache_id) || cache_id(path, options) do
         request = HttpRequest.new path: path, method: method, config: api_model_configuration
         request.builder = options.delete(:builder) || api_model_configuration.builder || self
         request.options.deep_merge! options
@@ -35,7 +34,6 @@ module ApiModel
     end
 
     def cache_id(path, options={})
-      return @cache_id if @cache_id
       p = (options[:params] || {}).collect{ |k,v| "#{k}#{v}" }.join("")
       "#{path}#{p}"
     end
