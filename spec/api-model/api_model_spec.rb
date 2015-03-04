@@ -309,7 +309,7 @@ describe ApiModel do
     it 'should not pass custom cache_ids onto api requests' do
       expect {
         VCR.use_cassette('posts') { BlogPost.get_json "http://api-model-specs.com/single_post", {}, cache_id: "custom_key" }
-      }.to_not raise_error(Ethon::Errors::InvalidOption)
+      }.to_not raise_error
     end
   end
 
