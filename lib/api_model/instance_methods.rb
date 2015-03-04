@@ -29,11 +29,21 @@ module ApiModel
       errors_hash.each do |field,messages|
         if messages.is_a?(Array)
           messages.each do |message|
-            obj.errors.add field.to_sym, message
+            set_error_on_self_or_child field, message, obj
           end
         else
-          obj.errors.add field.to_sym, messages
+          set_error_on_self_or_child field, messages, obj
         end
+      end
+    end
+
+    # If the field to apply errors to is another ApiModel instance, call ++set_errors_from_hash++ on it.
+    # Otherwise, go ahead and treat it as a normal ActiveModel error on the current ++obj++ instance.
+    def set_error_on_self_or_child(field, messages, obj = self)
+      if obj.respond_to?(field.to_sym) && obj.send(field.to_sym).respond_to?(:set_error_on_self_or_child)
+        obj.send(field.to_sym).set_errors_from_hash messages
+      else
+        obj.errors.add field.to_sym, messages
       end
     end
 
