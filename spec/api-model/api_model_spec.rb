@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'support/mock_models/blog_post'
 require 'support/mock_models/car'
 require 'support/mock_models/user'
+require 'support/mock_models/garage'
 
 describe ApiModel do
 
@@ -161,6 +162,23 @@ describe ApiModel do
 
     it 'should return false if errors is not a hash' do
       car.set_errors_from_hash("Foobar").should be_false
+    end
+  end
+
+  describe "setting errors on nested models" do
+    let(:car) { Car.new }
+    let(:garage) { Garage.new car: car }
+
+    before do
+      garage.set_errors_from_hash style: "is invalid", car: { name: "sounds funny" }
+    end
+
+    it 'should set errors on the parent normally' do
+      garage.errors[:style].should eq ["is invalid"]
+    end
+
+    it 'should set errors on the child normally' do
+      garage.car.errors[:name].should eq ["sounds funny"]
     end
   end
 
