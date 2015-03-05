@@ -83,13 +83,5 @@ module ApiModel
       end
     end
 
-    # Returns all the defined attributes in a hash without the :persisted attribute which was added automatically.
-    #
-    # This is useful for when you need to pass the entire object back to an API, or if you want to serialize the object.
-    def properties_hash
-      ActiveSupport::Deprecation.warn "properties_hash() is deprecated and may be removed from future releases, use as_json() instead.", caller
-      self.as_json.with_indifferent_access
-    end
-
   end
 end
