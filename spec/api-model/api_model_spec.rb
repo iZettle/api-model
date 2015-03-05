@@ -163,6 +163,11 @@ describe ApiModel do
     it 'should return false if errors is not a hash' do
       car.set_errors_from_hash("Foobar").should be_false
     end
+
+    it 'should set errors on the aliased method when you refer to the synonym' do
+      car.set_errors_from_hash numberOfDoors: "must be at least 20"
+      car.errors[:number_of_doors].should eq ["must be at least 20"]
+    end
   end
 
   describe "setting errors on nested models" do

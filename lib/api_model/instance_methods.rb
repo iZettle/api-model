@@ -43,7 +43,7 @@ module ApiModel
       if obj.respond_to?(field.to_sym) && obj.send(field.to_sym).respond_to?(:set_error_on_self_or_child)
         obj.send(field.to_sym).set_errors_from_hash messages
       else
-        obj.errors.add field.to_sym, messages
+        obj.errors.add obj.class.real_attribute_name_for(field.to_sym), messages
       end
     end
 

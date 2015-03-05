@@ -1,10 +1,19 @@
 module ApiModel
   module ClassMethods
 
+    def attribute_synonyms
+      @attribute_synonyms ||= {}
+    end
+
     def attribute_synonym(primary_method_name, *alternate_names)
       alternate_names.each do |alternate_name|
         alias_method "#{alternate_name}=".to_sym, "#{primary_method_name}=".to_sym
+        attribute_synonyms[alternate_name] = primary_method_name
       end
+    end
+
+    def real_attribute_name_for(name)
+      attribute_synonyms[name] || name
     end
 
     def get_json(path, params={}, options={})
