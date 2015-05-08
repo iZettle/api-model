@@ -256,6 +256,13 @@ describe ApiModel do
       blog_post.errors[:name].should eq ["Cannot be blank"]
     end
 
+    it 'should set errors on the instance even if the request was sucessful' do
+      expect {
+        VCR.use_cassette('posts') { blog_post.save "/post/200_with_errors", name: "" }
+      }.to change{ blog_post.errors.size }.from(0).to(1)
+      blog_post.errors[:name].should eq ["Cannot be blank"]
+    end
+
     it 'should be possible to change the error root when making the save call' do
       expect {
         VCR.use_cassette('posts') { blog_post.save "/post/with_nested_errors", {name: ""}, json_errors_root: "result.errors" }

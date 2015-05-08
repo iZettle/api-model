@@ -87,7 +87,7 @@ module ApiModel
     # Then calling ++fetch_from_body("foo.bar.baz")++ would return "Hello world"
     def fetch_from_body(key_reference)
       key_reference.split(".").inject(response_body) do |hash,key|
-        hash.fetch(key)
+        hash.fetch(key, nil)
       end
     end
 
