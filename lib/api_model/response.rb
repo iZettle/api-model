@@ -87,7 +87,11 @@ module ApiModel
     # Then calling ++fetch_from_body("foo.bar.baz")++ would return "Hello world"
     def fetch_from_body(key_reference)
       key_reference.split(".").inject(response_body) do |hash,key|
-        hash.fetch(key, nil)
+        begin
+          hash.fetch(key, nil)
+        rescue NoMethodError
+          Log.error "Could not set #{key_reference} on #{hash}"
+        end
       end
     end
 
