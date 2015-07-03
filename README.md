@@ -95,6 +95,22 @@ use as a builder should respond to `#build`, with the instance hash as an argume
   MyModel.get_json "/foo", { some_param: "bar" }, builder: MyCustomBuilder.new
 ```
 
+It is also possible to create slightly more advanced builders which can access the entire response object,
+so that they can modify the return result more directly, or add to the `metadata` object on the response.
+
+```ruby
+  class MyCustomBuilder
+    def build(response, hash)
+      response.metadata.pagination = hash["pagination"]
+      MyModel.new name: hash["name"]
+    end
+  end
+
+  result = MyModel.get_json "/foo", { some_param: "bar" }, builder: MyCustomBuilder.new
+  result.name # => whatever was in hash["name"]
+  result.metadata # => OpenStruct of values
+```
+
 Handling validation errors in responses
 ---------------------------------------
 
@@ -112,6 +128,12 @@ ActiveModel validations, you can do that, too:
   car.set_errors_from_hash name: "cannot be blank"
   car.errors[:name] # => ["cannot be blank"]
 ```
+
+Metadata
+--------
+
+Metadata can be stored directly on the response object, even when it contains an array. By using custom builders,
+you can leverage this to store useful data such as pagination metadata (see the builders section for an example).
 
 Configuring API Model
 ---------------------
