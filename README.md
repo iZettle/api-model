@@ -192,6 +192,9 @@ an API which returns something other than JSON, you can set custom parsers to de
 before they are sent to builder classes. The parser should work in the same way as a custom builder, except it needs
 to respond to `#parse`, with the raw response body as an argument.
 
+Parsers can also access the raw `response` object, like builders, by using a #parse method which takes two
+arguments.
+
 ### Raising exceptions
 
 ```ruby

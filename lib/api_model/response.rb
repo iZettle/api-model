@@ -46,7 +46,13 @@ module ApiModel
     end
 
     def response_body
-      @response_body ||= @_config.parser.parse http_response.api_call.body
+      return @response_body if @response_body.present?
+
+      if @_config.parser.method(:parse).arity == 2
+        @response_body = @_config.parser.parse self, http_response.api_call.body
+      else
+        @response_body = @_config.parser.parse http_response.api_call.body
+      end
     end
 
     def successful?
