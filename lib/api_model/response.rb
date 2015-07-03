@@ -35,7 +35,11 @@ module ApiModel
 
     def build(builder, hash)
       if builder.respond_to? :build
-        builder.build hash
+        if builder.method(:build).arity == 2
+          builder.build self, hash
+        else
+          builder.build hash
+        end
       else
         builder.new hash
       end

@@ -8,4 +8,11 @@ class BlogPost < ApiModel::Base
     end
   end
 
+  class AdvancedCustomBuilder
+    def build(response, hash)
+      response.metadata.custom_attr = "Hello"
+      BlogPost.new hash
+    end
+  end
+
 end

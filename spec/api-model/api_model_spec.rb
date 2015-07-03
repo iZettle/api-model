@@ -65,6 +65,20 @@ describe ApiModel do
         custom_built_blog_post.title.should eq "FOOBAR"
       end
     end
+
+    describe "with an advanced custom builder" do
+      let(:custom_built_blog_post) do
+        VCR.use_cassette('posts') do
+          BlogPost.get_json "http://api-model-specs.com/single_post", {}, builder: BlogPost::AdvancedCustomBuilder.new
+        end
+      end
+
+      it "should use the response object when building" do
+        custom_built_blog_post.should be_a(BlogPost)
+        custom_built_blog_post.metadata.custom_attr.should eq "Hello"
+        custom_built_blog_post.name.should eq "foo"
+      end
+    end
   end
 
   describe "using Virtus to build with attribute coercion" do
