@@ -19,9 +19,7 @@ module ApiModel
     end
 
     def build_objects
-      raise UnauthenticatedError if @_config.raise_on_unauthenticated && http_response.api_call.response_code == 401
-      raise NotFoundError if @_config.raise_on_not_found && http_response.api_call.response_code == 404
-      raise ServerError if @_config.raise_on_server_error && http_response.api_call.response_code == 500
+      handle_response_errors
       return self if response_body.nil?
 
       if response_build_hash.is_a? Array
@@ -116,6 +114,24 @@ module ApiModel
         end
       else
         response_body
+      end
+    end
+
+    private
+
+    def handle_response_errors
+      error_message = "#{http_response.api_call.response_code}: #{http_response.api_call.request.url}"
+
+      if @_config.raise_on_unauthenticated && http_response.api_call.response_code == 401
+        raise UnauthenticatedError, error_message
+      end
+
+      if @_config.raise_on_not_found && http_response.api_call.response_code == 404
+        raise NotFoundError, error_message
+      end
+
+      if @_config.raise_on_server_error && http_response.api_call.response_code.between?(500, 599)
+        raise ServerError, error_message
       end
     end
 

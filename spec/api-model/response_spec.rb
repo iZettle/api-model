@@ -138,7 +138,7 @@ describe ApiModel::Response do
         BlogPost.api_config { |c| c.raise_on_unauthenticated = true }
         expect {
           api_request
-        }.to raise_error(ApiModel::UnauthenticatedError)
+        }.to raise_error(ApiModel::UnauthenticatedError, "401: http://api-model-specs.com/needs_auth")
       end
 
       it 'should not raise an ApiModel::UnauthenticatedError if raise_on_unauthenticated is false' do
@@ -160,7 +160,7 @@ describe ApiModel::Response do
         BlogPost.api_config { |c| c.raise_on_not_found = true }
         expect {
           api_request
-        }.to raise_error(ApiModel::NotFoundError)
+        }.to raise_error(ApiModel::NotFoundError, "404: http://api-model-specs.com/not_found")
       end
 
       it 'should not raise an ApiModel::NotFoundError if raise_on_not_found is false' do
@@ -182,7 +182,7 @@ describe ApiModel::Response do
         BlogPost.api_config { |c| c.raise_on_server_error = true }
         expect {
           api_request
-        }.to raise_error(ApiModel::ServerError)
+        }.to raise_error(ApiModel::ServerError, "500: http://api-model-specs.com/server_error")
       end
 
       it 'should not raise an ApiModel::ServerError if raise_on_server_error is false' do
@@ -190,6 +190,15 @@ describe ApiModel::Response do
         expect {
           api_request
         }.to_not raise_error
+      end
+
+      it 'should log any status code in the 500 range when raise_on_server_error is true' do
+        BlogPost.api_config { |c| c.raise_on_server_error = true }
+        expect {
+          VCR.use_cassette('errors') do
+            BlogPost.get_json "http://api-model-specs.com/unavailable"
+          end
+        }.to raise_error(ApiModel::ServerError, "503: http://api-model-specs.com/unavailable")
       end
     end
   end
