@@ -120,18 +120,16 @@ module ApiModel
     private
 
     def handle_response_errors
-      error_message = "#{http_response.api_call.response_code}: #{http_response.api_call.request.url}"
-
       if @_config.raise_on_unauthenticated && http_response.api_call.response_code == 401
-        raise UnauthenticatedError, error_message
+        raise UnauthenticatedError, @_config.error_message_formatter.format(http_response)
       end
 
       if @_config.raise_on_not_found && http_response.api_call.response_code == 404
-        raise NotFoundError, error_message
+        raise NotFoundError, @_config.error_message_formatter.format(http_response)
       end
 
       if @_config.raise_on_server_error && http_response.api_call.response_code.between?(500, 599)
-        raise ServerError, error_message
+        raise ServerError, @_config.error_message_formatter.format(http_response)
       end
     end
 

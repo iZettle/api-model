@@ -47,6 +47,17 @@ describe ApiModel, "Configuration" do
     end
   end
 
+  describe "error_message_formatter" do
+    it 'should default to ApiModel::ErrorMessageFormatter' do
+      Banana.api_model_configuration.error_message_formatter.should eq ApiModel::ErrorMessageFormatter
+    end
+
+    it 'should be possible to set on a class' do
+      Banana.api_config { |c| c.error_message_formatter = "foo" }
+      Banana.api_model_configuration.error_message_formatter.should eq "foo"
+    end
+  end
+
   describe "headers" do
     it 'should create default headers for content type and accepts' do
       headers = Banana.api_model_configuration.headers

@@ -4,7 +4,7 @@ module ApiModel
 
     attr_accessor :host, :json_root, :headers, :raise_on_unauthenticated, :cache_settings,
                   :raise_on_not_found, :cache_strategy, :parser, :builder, :raise_on_server_error,
-                  :json_errors_root
+                  :json_errors_root, :error_message_formatter
 
     def self.from_inherited_config(config)
       new config.instance_values.reject {|k,v| v.blank? }
@@ -30,6 +30,10 @@ module ApiModel
 
     def json_errors_root
       @json_errors_root ||= "errors"
+    end
+
+    def error_message_formatter
+      @error_message_formatter ||= ApiModel::ErrorMessageFormatter
     end
   end
 
