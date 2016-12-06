@@ -117,11 +117,11 @@ describe ApiModel::Response do
   end
 
   describe "passing core methods down to the built class" do
-    ApiModel::Response::FALL_THROUGH_METHODS.each do |fall_trhough_method|
-      it "should pass ##{fall_trhough_method} on the built object class" do
+    ApiModel::Response::FALL_THROUGH_METHODS.each do |fall_through_method|
+      it "should pass ##{fall_through_method} on the built object class" do
         allow_message_expectations_on_nil
-        valid_response.objects.should_receive(fall_trhough_method)
-        valid_response.send fall_trhough_method
+        valid_response.objects.should_receive(fall_through_method)
+        valid_response.send fall_through_method
       end
     end
   end
