@@ -43,18 +43,18 @@ module ApiModel
     module ClassMethods
 
       def reset_api_configuration
-        @_api_config = nil
+        Thread.current["#{self.name}_api_config"] = nil
       end
 
       def api_model_configuration
-        @_api_config || superclass.api_model_configuration
+        Thread.current["#{self.name}_api_config"] || superclass.api_model_configuration
       rescue
-        @_api_config = Configuration.new
+        Thread.current["#{self.name}_api_config"] = Configuration.new
       end
 
       def api_config
-        @_api_config = Configuration.from_inherited_config api_model_configuration
-        yield @_api_config
+        Thread.current["#{self.name}_api_config"] = Configuration.from_inherited_config api_model_configuration
+        yield Thread.current["#{self.name}_api_config"]
       end
 
     end

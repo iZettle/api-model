@@ -151,4 +151,24 @@ describe ApiModel, "Configuration" do
     Banana.api_model_configuration.host.should eq "new-host.com"
   end
 
+  it 'should not mutate config on other threads' do
+    ApiModel::Base.api_config { |c| c.host = "thread-1.com" }
+
+    thread = Thread.new do
+      ApiModel::Base.api_model_configuration.host.should be_nil
+    end
+
+    thread.join
+  end
+
+  it 'should not inherit config set in another thread' do
+    thread = Thread.new do
+      ApiModel::Base.api_config { |c| c.host = "thread-2.com" }
+    end
+
+    thread.join
+
+    Banana.api_model_configuration.host.should be_nil
+  end
+
 end
