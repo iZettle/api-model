@@ -100,7 +100,7 @@ describe ApiModel do
       end
 
       it 'should let you define custom methods as normal' do
-        car.is_fast?.should be_true
+        car.is_fast?.should be_truthy
       end
 
       it 'should let you respect default values for properties' do
@@ -127,7 +127,7 @@ describe ApiModel do
       end
 
       it 'should let you define custom methods as normal' do
-        cars.last.is_fast?.should be_false
+        cars.last.is_fast?.should be_falsey
       end
 
       it 'should respect default values for properties, but also override them' do
@@ -175,7 +175,7 @@ describe ApiModel do
     end
 
     it 'should return false if errors is not a hash' do
-      car.set_errors_from_hash("Foobar").should be_false
+      car.set_errors_from_hash("Foobar").should be_falsey
     end
 
     it 'should set errors on the aliased method when you refer to the synonym' do
@@ -336,7 +336,7 @@ describe ApiModel do
     it 'should be posible to set an instance as persisted' do
       blog_post = BlogPost.new
       blog_post.persisted = true
-      blog_post.persisted?.should be_true
+      blog_post.persisted?.should be_truthy
     end
   end
 
@@ -362,12 +362,12 @@ describe ApiModel do
 
     it 'should be true if the api call was successful' do
       new_car.stub_chain(:http_response, :api_call, :success?).and_return true
-      new_car.successful?.should be_true
+      new_car.successful?.should be_truthy
     end
 
     it 'should be false if the api call was not successful' do
       new_car.stub_chain(:http_response, :api_call, :success?).and_return false
-      new_car.successful?.should be_false
+      new_car.successful?.should be_falsey
     end
   end
 
