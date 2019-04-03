@@ -4,6 +4,12 @@
 API Model
 =========
 
+---
+
+**Deprecated:** iZettle is gradually moving away from ApiModel and will eventually discontinue the project.
+
+---
+
 API model is a simple wrapper for interacting with external APIs. It tries to make
 it very simple and easy to make API calls and map the responses into objects.
 
