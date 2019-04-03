@@ -6,7 +6,7 @@ API Model
 
 ---
 
-**Deprecated:** iZettle is gradually moving away from ApiModel and will eventually discontinue the project.
+**Deprecated:** iZettle is gradually moving away from ApiModel and will eventually discontinue the project. If you're looking for an alternative, check out [iZettle/api-blueprint](https://github.com/iZettle/api-blueprint).
 
 ---
 
